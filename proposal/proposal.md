@@ -58,7 +58,7 @@ The project will be implemented using a React frontend and Espress.js backend, w
 
 ### Database schema and relationships
 
-_Database schema diagram created using [dbdiagram.io](www.dbdiagram.io)_
+_Database schema diagram created using [dbdiagram.io](https://www.dbdiagram.io)_
 
 ![database](https://raw.githubusercontent.com/MaazXQureshi/ece1724webproject/refs/heads/master/proposal/proposal_images/database.png)
 
@@ -70,7 +70,7 @@ File storage will be used to store event images, such as promotional posters or 
 
 A separate frontend experience will be designed for our two user groups, community members and event organizers. Users can register an account on the web application. Upon logging in, users will have access to features specific to their user role. For community members looking for volunteering opportunities, the user interface provides a dashboard to search for events based on different attributes and subscribe to events that they are interested in joining. Event organizers will have a dedicated interface to create, update, and manage their organisational events, ensuring that they can easily share information and track participation.
 
-_All UI designs created using [Figma](www.figma.com)_
+_All UI designs created using [Figma](https://www.figma.com)_
 
 #### Events dashboard
 
