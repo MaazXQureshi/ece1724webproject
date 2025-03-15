@@ -1,6 +1,6 @@
 # VolunteerConnect
 
-#### An interactive dashboard for volunteers and organizers
+#### An interactive dashboard for volunteers and event organizers
 
 ---
 
@@ -60,7 +60,7 @@ The project will be implemented using a React frontend and Espress.js backend, w
 
 _Database schema diagram created using [dbdiagram.io](www.dbdiagram.io)_
 
-![database](https://github.com/MaazXQureshi/ece1724webproject/blob/master/proposal/proposal_images/database.png)
+![database](https://raw.githubusercontent.com/MaazXQureshi/ece1724webproject/refs/heads/master/proposal/proposal_images/database.png)
 
 ### File storage requirements
 
@@ -74,23 +74,23 @@ _All UI designs created using [Figma](www.figma.com)_
 
 #### Events dashboard
 
-![events_dashboard](https://github.com/MaazXQureshi/ece1724webproject/blob/master/proposal/proposal_images/events_dashboard.png)
+![events_dashboard](https://raw.githubusercontent.com/MaazXQureshi/ece1724webproject/refs/heads/master/proposal/proposal_images/events_dashboard.png)
 
 #### Organizer information page
 
-![organizer_page](https://github.com/MaazXQureshi/ece1724webproject/blob/master/proposal/proposal_images/organizer_page.png)
+![organizer_page](https://raw.githubusercontent.com/MaazXQureshi/ece1724webproject/refs/heads/master/proposal/proposal_images/organizer_page.png)
 
 #### Event creation/edit page
 
-![create_event](https://github.com/MaazXQureshi/ece1724webproject/blob/master/proposal/proposal_images/create_event.png)
+![create_event](https://raw.githubusercontent.com/MaazXQureshi/ece1724webproject/refs/heads/master/proposal/proposal_images/create_event.png)
 
 #### Search bar filter dialog
 
-![filter](https://github.com/MaazXQureshi/ece1724webproject/blob/master/proposal/proposal_images/filter.png)
+![filter](https://raw.githubusercontent.com/MaazXQureshi/ece1724webproject/refs/heads/master/proposal/proposal_images/filter.png)
 
 #### Event info dialog
 
-![event_info](https://github.com/MaazXQureshi/ece1724webproject/blob/master/proposal/proposal_images/event_info.png)
+![event_info](https://raw.githubusercontent.com/MaazXQureshi/ece1724webproject/refs/heads/master/proposal/proposal_images/event_info.png)
 
 ### Integration with external services
 
