@@ -26,20 +26,31 @@ All in all, the dashboard seeks to help the entire Toronto community by making v
 
 ## Objective and Key Features
 
-The project’s objective is to create a dashboard focused on features such as volunteering events browsing, searching, filtering, creation and subscription to make it easier for volunteers to find the opportunities they seek. It aims to help users quickly discover and manage events by consolidating all of these features in one application through the use of an extensive landing dashboard page, search bar and filtration options. The project also aims to give users a customizable experience by allowing them to shortlist events for viewing later and get notifications about all with the click of a few buttons in order to make the entire process as convenient as possible. Another objective of the application is to offer event organizers with a simple form creation for publishing their events without having to go through the hassle of creating one themselves, coupled with a registration system for obtaining an accurate headcount. Overall, the project’s purpose is to aid volunteers and event organizers by offering a fully integrated dashboard for all volunteering related information rather than having them pursue other, more inefficient avenues.
+The project’s objective is to create a dashboard focused on features such as volunteering events browsing, searching, filtering, creation and subscription to make it easier for volunteers to find the opportunities they seek. It aims to help users quickly discover and manage events by consolidating all of these features in one application through the use of an extensive landing dashboard page, search bar and filtration options. The project also aims to give users a customizable experience by allowing them to shortlist events for viewing later and get notifications about all with the click of a few buttons in order to make the entire process as convenient as possible.
+
+Another objective of the application is to offer event organizers with a simple form creation for publishing their events without having to go through the hassle of creating one themselves, coupled with a registration system for obtaining an accurate headcount. Overall, the project’s purpose is to aid volunteers and event organizers by offering a fully integrated dashboard for all volunteering related information rather than having them pursue other, more inefficient avenues.
 
 ### Core Features
 
-Browse/Search for volunteering events: The landing page features a dashboard allowing users to explore volunteering opportunities. A search bar with advanced filtering options will be available for users to narrow down their search based on their interests and availability.
-Event creation: Organizers can register and publish new events for users to view and subscribe to, including all relevant information such as name, location, date / time, images, etc.
-Subscription system: Users will be able to save events for viewing later. This will allow users to create a personalized list of interested events and additionally help organizers manage headcount.
+- **Browse/Search for volunteering events**
+
+  - The landing page features a dashboard allowing users to explore volunteering opportunities.
+  - A search bar with advanced filtering options will be available for users to narrow down their search based on their interests and availability.
+
+- **Event creation**:
+
+  - Organizers can register and publish new events for users to view and subscribe to, including all relevant information such as name, location, date / time, images, etc.
+
+- **Subscription system**
+  - Users will be able to save events for viewing later. This will allow users to create a personalized list of interested events and additionally help organizers manage headcount.
 
 ### Advanced Features
 
-User authentication and authorization: The platform will implement secure login and role-based access control, controlling access between community members and event organizers.
-API integration with external services
-Email notification system to send announcements, updates or reminders to users who have subscribed to a volunteering event
-Google Maps or equivalent API to show accurate event locations (time permitting)
+- **User authentication and authorization**
+  - The platform will implement secure login and role-based access control, controlling access between community members and event organizers.
+- **API integration with external services**
+  - Email notification system to send announcements, updates or reminders to users who have subscribed to a volunteering event
+  - Google Maps or equivalent API to show accurate event locations (lower priority, time permitting)
 
 ### Technical implementation approach
 
@@ -48,6 +59,8 @@ The project will be implemented using a React frontend and Espress.js backend, w
 ### Database schema and relationships
 
 _Database schema diagram created using [dbdiagram.io](www.dbdiagram.io)_
+
+![database](https://github.com/MaazXQureshi/ece1724webproject/blob/master/proposal/proposal_images/database.png)
 
 ### File storage requirements
 
@@ -61,13 +74,23 @@ _All UI designs created using [Figma](www.figma.com)_
 
 #### Events dashboard
 
+![events_dashboard](https://github.com/MaazXQureshi/ece1724webproject/blob/master/proposal/proposal_images/events_dashboard.png)
+
 #### Organizer information page
+
+![organizer_page](https://github.com/MaazXQureshi/ece1724webproject/blob/master/proposal/proposal_images/organizer_page.png)
 
 #### Event creation/edit page
 
+![create_event](https://github.com/MaazXQureshi/ece1724webproject/blob/master/proposal/proposal_images/create_event.png)
+
 #### Search bar filter dialog
 
+![filter](https://github.com/MaazXQureshi/ece1724webproject/blob/master/proposal/proposal_images/filter.png)
+
 #### Event info dialog
+
+![event_info](https://github.com/MaazXQureshi/ece1724webproject/blob/master/proposal/proposal_images/event_info.png)
 
 ### Integration with external services
 
@@ -79,8 +102,12 @@ The project leverages modern technologies and web development best practices for
 
 In addition, the project implements two advanced features:
 
-1. User Authentication and Authorization: Secure login and role-based access control are implemented to manage the two user roles, ensuring that users can only access features relevant to their role.
-2. API integration with external services: (To expand on this)
+- **User Authentication and Authorization**
+
+  - Secure login and role-based access control are implemented to manage the two user roles, ensuring that users can only access features relevant to their role.
+
+- **API integration with external services**
+  - (To expand on this)
 
 ### Project scope and feasibility
 
