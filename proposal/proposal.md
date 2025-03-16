@@ -12,13 +12,13 @@
 
 ## Motivation
 
-Throughout the team’s time living in Toronto, through school and university, it has been difficult to find information on volunteering events happening around the city. To find such events, people have often had to rely on flyers or bulletin boards which are often overpopulated with unrelated advertisements, out-of-date information or are mostly ignored due to the lack of accessibility these options offer. Most people rely on word of mouth or happen to come across posts on social media advertising volunteering events, both of which are unreliable mediums. Additionally, these fare poorly when wanting to search for events that pertain to personal interests since organizers and events are not filtered.
+Throughout the team’s time living in Toronto, it has been difficult to find information on volunteering events happening around the city. To find such events, people have often had to rely on flyers or bulletin boards which are often overpopulated with unrelated advertisements, out-of-date information or are mostly ignored due to the lack of accessibility these options offer. Most people rely on word of mouth or come across posts on social media advertising volunteering events - both unreliable mediums. Additionally, these fare poorly when wanting to search for events pertaining to personal interests since events are not filtered.
 
-Consequently, being executive members of university clubs, it has been equally difficult to advertise volunteering events, having to rely on social media such as Facebook, Instagram and Discord. These come with limitations of their own, as users have to be following social media accounts or be part of groups in order to be notified of new events - defeating the purpose of having people discover new volunteering opportunities.
+Consequently, being executive members of university clubs, it has been equally difficult to advertise volunteering events, having to rely on social media. This comes with limitations of its own, as users have to be following social media accounts or be part of groups in order to be notified of new events - defeating the purpose of having people discover new volunteering opportunities.
 
 Overall, there is a seeming lack of a centralized volunteering hub for people to look up volunteering events that are happening around the city in a convenient manner, as well as event organizers to get an accurate headcount for planning purposes. Our project aims to address this by giving the community a dashboard on which to post, search for, view and sign up for volunteering events that are happening across the city.
 
-This project is worth pursuing for the benefit of the entire Toronto community - both for people exploring for events to volunteer in, as well as event organizers to determine interest. Having a centralised dashboard helps all manner of students. Residents who have just moved into the city might not know where to look or who to ask for regarding volunteering opportunities - this dashboard will help them conveniently search for and view all sorts of events that they are interested in, as well as help express interest in them to notify the organizers and secure a spot. Long-time residents trying to find specific opportunities to suit their specialized interests will benefit greatly from the dashboard’s searching and filtering features, as well as view information to help them determine what fits into their schedule. Other target users include event organizers who, through the use of this platform, are able to post volunteering opportunities in a centralized place for all in the community to look at rather than having to rely on social media posts which may not reach the intended demographic. Furthermore, it helps them streamline event posting rather than having to manually create interest forms which in turn is complemented by the register feature for organizers to get an accurate headcount to better plan out these events.
+This project is worth pursuing for the benefit of the entire Toronto community - both for people exploring for events to volunteer in, as well as event organizers to determine interest. Residents who have just moved into the city might not know where to look or who to ask for regarding volunteering opportunities - this dashboard will help them conveniently search for and view all sorts of events that they are interested in, as well as help express interest in them to notify the organizers and secure a spot. Long-time residents trying to find specific opportunities to suit their specialized interests will benefit greatly from the dashboard’s searching and filtering features, which also helps determine schedule conflicts. Other target users include event organizers who will be able to post volunteering opportunities in a centralized place for the community to browse rather than having to rely on social media which may not reach their intended demographic. Furthermore, it helps them streamline event posting rather than having to manually create interest forms which in turn is complemented by the register feature for organizers to get an accurate headcount to better plan out these events.
 
 An existing solution is [Volunteer Toronto](https://www.volunteertoronto.ca/) which appears to be the central volunteering hub for Toronto. While this website has a good list of volunteering opportunities and sees frequent activity, there are a few limitations. The website only allows organizations to register (with a subscription fee) with no support for the general user, thereby neglecting a customized experience. The site’s interface looks dated, with little to no support for images and files when creating events as well very sparse search options limited mostly to keywords, category, and location. The site represents more of an information or listing hub rather than a dashboard that is tailored to be an all-in-one platform for both organizers and volunteers, which is what our platform aims to achieve.
 
@@ -37,7 +37,7 @@ Another objective of the application is to offer event organizers with a simple 
   - The landing page features a dashboard allowing users to explore volunteering opportunities.
   - A search bar with advanced filtering options will be available for users to narrow down their search based on their interests and availability.
 
-- **Event creation**:
+- **Event creation**
 
   - Organizers can register and publish new events for users to view and subscribe to, including all relevant information such as name, location, date / time, images, etc.
 
@@ -47,9 +47,9 @@ Another objective of the application is to offer event organizers with a simple 
 ### Advanced Features
 
 - **User authentication and authorization**
-  - The platform will implement secure login and role-based access control, controlling access between community members and event organizers.
+  - Secure login and role-based access control are implemented to manage community members and event organizers roles, ensuring that users can only access features relevant to their role.
 - **API integration with external services**
-  - Email notification system to send announcements, updates or reminders to users who have subscribed to a volunteering event
+  - The platform will be integrated with an email API to send announcements, updates or reminders to users who have subscribed to a volunteering event.
   - Google Maps or equivalent API to show accurate event locations (lower priority, time permitting)
 
 ### Technical implementation approach
@@ -64,7 +64,7 @@ _Database schema diagram created using [dbdiagram.io](https://www.dbdiagram.io)_
 
 ### File storage requirements
 
-File storage will be used to store event images, such as promotional posters or organization logos. Each event in the database will have an `image_url` field in the events table that stores the reference URL to the uploaded image. This approach will help efficiently manage image file storage and keep the database lightweight.
+File storage will be used to store event images, such as promotional posters or organization logos, limited to ~5MB per image. Each event and organizer in the database will have an `image_url` field in the events table that stores the reference URL to the uploaded image, requiring no authentication given the non-confidential nature of these images. DigitalOcean Spaces will be used as it is recommended by the course and provides easy file storage management, keeping the database efficient and lightweight.
 
 ### User interface and experience design
 
@@ -97,21 +97,17 @@ _All UI designs created using [Figma](https://www.figma.com)_
 The project will integrate with the following third-party APIs to further enhance user experience:
 
 1. Email API: An email service like SendGrid will be used to send notifications and announcements to users who have subscribed to events. This gives the event organizers a simple way to communicate with interested participants.
-2. Google Maps API: This is a optional API integration that the team plans to add if time permits. It will display the location of the event on an interactive map, providing users with better location context.
+2. Google Maps API: Optional API integration if time permits. Displays the location of the event on an interactive map, providing users with better location context.
 
 ### Explanation of how these features fulfill the course requirements
 
 The project leverages modern technologies and web development best practices for both frontend and backend development. The responsive user interface will be built using React and Tailwind CSS, leveraging reusable components offered by shadcn/ui such as dashboard cards and forms. It uses Express.js as backend to manage data stored in PostgreSQL and image URLs stored on the cloud using DigitalOcean Spaces. The frontend and backend will interact using RESTful API as implemented in course assignments.
 
-In addition, the project implements two advanced features:
-
-- **User Authentication and Authorization**：Secure login and role-based access control are implemented to manage the two user roles, ensuring that users can only access features relevant to their role.
-
-- **API integration with external services**：The platform will be integrated with an email API to manage event communication between the organizers and subscribed users.
+In addition, the project implements two advanced features as described in **Advanced Features** section above.
 
 ### Project scope and feasibility
 
-The project scope is well-defined with specific features that will leverage all the required technologies outlined in the course requirements. The features are carefully planned, supported by architecture designs, database schema and user interface diagrams created at the proposal stage to ensure feasibility of the project. The final product will be a working solution that is ready to be utilized by the community, demonstrating the team’s ability to deliver a high-quality, impactful application within the project timeline.
+The project scope is well-defined with specific features that can be split and developed independently by leveraging all the required technologies outlined in the course requirements. This is supplemented by the team having prior web development experience through software engineering courses and work experience, which has led us to carefully plan out features, supported by architecture designs, database schema and user interface diagrams created during this early proposal stage which will ensure the feasibility of the project. Despite this meticulous planning, the team realizes there might be unforeseen risks and delays and have therefore budgeted extra buffer time for testing and integration with external libraries. Frequent communication, progress checks and meetings along with continuous testing will also help ensure a robust final solution.
 
 ## Tentative Plan
 
