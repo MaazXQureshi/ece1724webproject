@@ -14,8 +14,8 @@ datasource db {
 }
 
 model Organizer {
-  id       Int       @id @default(autoincrement())
-  name     String    @unique
+  id       Int      @id @default(autoincrement())
+  name     String   @unique
   info     String?
   email    String?
   phone    String?
@@ -26,60 +26,60 @@ model Organizer {
 }
 
 model User {
-  id           Int       @id @default(autoincrement())
-  email        String    @unique
-  username     String    @unique
-  admin        Boolean
-  passwordHash String
-  admins       Admin[]
+  id            Int        @id @default(autoincrement())
+  email         String     @unique
+  username      String     @unique
+  admin         Boolean
+  passwordHash  String
+  admins        Admin[]
   registrations Register[]
 }
 
 model Admin {
   orgId  Int
   userId Int
-  
+
   organizer Organizer @relation(fields: [orgId], references: [id])
   user      User      @relation(fields: [userId], references: [id])
-  
+
   @@id([orgId, userId])
 }
 
 model Register {
   userId  Int
   eventId Int
-  
+
   user  User  @relation(fields: [userId], references: [id])
   event Event @relation(fields: [eventId], references: [id])
-  
+
   @@id([userId, eventId])
 }
 
 model Event {
-  id        Int        @id @default(autoincrement())
-  clubId    Int
-  name      String     @unique
-  time      DateTime
-  location  String
-  info      String?
-  hours     Int?
-  imageUrl  String?
-  organizer Organizer  @relation(fields: [clubId], references: [id])
+  id            Int        @id @default(autoincrement())
+  clubId        Int
+  name          String
+  time          DateTime
+  location      String
+  info          String?
+  hours         Int?
+  imageUrl      String?
+  organizer     Organizer  @relation(fields: [clubId], references: [id])
   registrations Register[]
 }
 
 model Tag {
-  id       Int      @id @default(autoincrement())
-  name     String
-  orgTags  OrgTag[]
+  id      Int      @id @default(autoincrement())
+  name    String
+  orgTags OrgTag[]
 }
 
 model OrgTag {
   orgId Int
   tagId Int
-  
+
   organizer Organizer @relation(fields: [orgId], references: [id])
   tag       Tag       @relation(fields: [tagId], references: [id])
-  
+
   @@id([orgId, tagId])
 }

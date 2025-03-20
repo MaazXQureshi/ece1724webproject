@@ -1,6 +1,7 @@
 const express = require("express");
-const routes = require("./routes");
-const middleware = require("./middleware");
+const routes = require("./routes/routes");
+const middleware = require("./middleware/middleware");
+const cors = require("cors");
 
 const app = express();
 const PORT = 3000;
@@ -8,6 +9,7 @@ const PORT = 3000;
 // Middleware
 app.use(express.json());
 app.use(middleware.requestLogger);
+app.use(cors());
 
 // Routes
 app.use("/api", routes);
