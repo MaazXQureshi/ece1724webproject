@@ -58,7 +58,7 @@ const dbOperations = {
       await prisma.register.deleteMany({
         where: {
           event: {
-            clubId: id,
+            clubId: orgId,
           },
         },
       });
@@ -66,20 +66,20 @@ const dbOperations = {
       // Delete all events belonging to the organizer
       await prisma.event.deleteMany({
         where: {
-          clubId: id,
+          clubId: orgId,
         },
       });
 
       // Delete all tags associated with the organizer
       await prisma.orgTag.deleteMany({
         where: {
-          orgId: id,
+          orgId: orgId,
         },
       });
 
       // Delete the organizer (this also deletes the associated admin)
       await prisma.organizer.delete({
-        where: { id },
+        where: { orgId },
       });
 
       return {
