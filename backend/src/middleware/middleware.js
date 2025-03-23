@@ -1,4 +1,4 @@
-const { body, param, validationResult } = require('express-validator');
+const { body, param, validationResult } = require("express-validator");
 
 // Request logger middleware
 const requestLogger = (req, res, next) => {
@@ -11,13 +11,13 @@ function isEmpty(str) {
 }
 
 const validateEventData = [
-  body('name').notEmpty().withMessage('Event name is required'),
-  body('time').isISO8601().withMessage('Invalid date format (use ISO 8601)'),
-  body('location').isString().withMessage('Event location is required'),
-  body('clubId').isInt().withMessage('Organizer ID must be an integer'),
-  body('info').optional().isString().withMessage('Event info must be a string'),
-  body('hours').isInt({ min: 0 }).withMessage('Event hours is required'),
-  body('imageUrl').optional().isURL().withMessage('Invalid image URL'),
+  body("name").notEmpty().withMessage("Event name is required"),
+  body("time").isISO8601().withMessage("Invalid date format (use ISO 8601)"),
+  body("location").isString().withMessage("Event location is required"),
+  body("clubId").isInt().withMessage("Organizer ID must be an integer"),
+  body("info").optional().isString().withMessage("Event info must be a string"),
+  body("hours").isInt({ min: 0 }).withMessage("Event hours is required"),
+  body("imageUrl").optional().isURL().withMessage("Invalid image URL"),
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -28,20 +28,35 @@ const validateEventData = [
 ];
 
 const validateEventQuery = [
-  body('name').optional().isString(),
-  body('time').optional().isISO8601(),
-  body('location').optional().isString(),
-  body('hours').optional().isInt({ min: 0 }),
-  body('tags').optional().isArray({ min: 0, max: 10 }), // can change max
-  body('limit').optional().isInt({ min: 1, max: 100 }),
-  body('offset').optional().isInt( { min: 0 }),
+  body("name").optional().isString(),
+  body("time").optional().isISO8601(),
+  body("location").optional().isString(),
+  body("hours").optional().isInt({ min: 0 }),
+  body("tags").optional().isArray({ min: 0, max: 10 }), // can change max
+  body("limit").optional().isInt({ min: 1, max: 100 }),
+  body("offset").optional().isInt({ min: 0 }),
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(401).json({
         error: "Validation Error",
-        message: "Invalid query params"
+        message: "Invalid query params",
       });
+    }
+    next();
+  },
+];
+
+const validateOrganizerData = [
+  body("name").notEmpty().withMessage("Organizer name is required"),
+  body("info").optional().isString().withMessage("Event info must be a string"),
+  body("email").optional().isEmail().withMessage("Invalid email format"),
+  body("phone").optional().isMobilePhone().withMessage("Invalid phone number"),
+  body("imageUrl").optional().isURL().withMessage("Invalid image URL"),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
     }
     next();
   },
@@ -75,5 +90,6 @@ module.exports = {
   validateResourceId,
   errorHandler,
   validateEventData,
-  validateEventQuery
+  validateEventQuery,
+  validateOrganizerData,
 };

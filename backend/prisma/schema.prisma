@@ -22,7 +22,9 @@ model Organizer {
   imageUrl String?
   events   Event[]
   orgTags  OrgTag[]
-  admins   Admin[]
+
+  adminId  Int     @unique  // Ensures only one admin per organizer
+  admin    User    @relation(fields: [adminId], references: [id], onDelete: Cascade)  
 }
 
 model User {
@@ -31,18 +33,8 @@ model User {
   username      String     @unique
   admin         Boolean
   passwordHash  String
-  admins        Admin[]
+  organizer     Organizer?  // A user can only be an admin of one organizer
   registrations Register[]
-}
-
-model Admin {
-  orgId  Int
-  userId Int
-
-  organizer Organizer @relation(fields: [orgId], references: [id])
-  user      User      @relation(fields: [userId], references: [id])
-
-  @@id([orgId, userId])
 }
 
 model Register {
