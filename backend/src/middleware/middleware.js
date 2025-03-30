@@ -1,4 +1,7 @@
 const { body, param, validationResult } = require("express-validator");
+const jwt = require("jsonwebtoken");
+
+require("dotenv").config();
 
 // Request logger middleware
 const requestLogger = (req, res, next) => {
@@ -85,6 +88,34 @@ const errorHandler = (err, req, res) => {
   });
 };
 
+// Authentication Middleware
+const authenticate = (req, res, next) => {
+  const token = req.cookies.token;
+  if (!token) return res.status(401).json({ error: "Unauthorized" });
+
+  jwt.verify(token, JWT_SECRET, (err, decoded) => {
+    if (err) return res.status(403).json({ error: "Invalid token" });
+    req.user = decoded;
+    next();
+  });
+};
+
+// Middleware for admin access to specific routes
+const authorizeAdmin = (req, res, next) => {
+  const { id } = req.params;
+  if (!req.user.isAdmin || req.user.id !== parseInt(id)) {
+    return res.status(403).json({ error: "Access denied" });
+  }
+  next();
+};
+
+// Example Usage:
+/*
+app.get('/edit/:id', authenticate, authorizeAdminForRoute, (req, res) => {
+  res.json({ message: `Admin ${req.user.id} has access to edit page ${req.params.id}` });
+});
+*/
+
 module.exports = {
   requestLogger,
   validateResourceId,
@@ -92,4 +123,6 @@ module.exports = {
   validateEventData,
   validateEventQuery,
   validateOrganizerData,
+  authenticate,
+  authorizeAdmin,
 };

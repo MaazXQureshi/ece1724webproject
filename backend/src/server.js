@@ -2,6 +2,9 @@ const express = require("express");
 const routes = require("./routes/routes");
 const middleware = require("./middleware/middleware");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
+
+require("dotenv").config();
 
 const app = express();
 const PORT = 3000;
@@ -9,7 +12,8 @@ const PORT = 3000;
 // Middleware
 app.use(express.json());
 app.use(middleware.requestLogger);
-app.use(cors());
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(cookieParser());
 
 // Routes
 app.use("/api", routes);
