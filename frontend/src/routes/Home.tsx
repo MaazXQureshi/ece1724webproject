@@ -1,15 +1,12 @@
-import {Button} from "@/components/ui/button.tsx";
+import { Navbar } from "@/components/Navbar.tsx";
+import { EventsDashboard } from "@/components/EventsDashboard.tsx";
 
+export const Home = () => {
 
-function Home() {
-
-    return (
-        <>
-            <div>
-                <Button variant={"outline"}>Click</Button>
-            </div>
-        </>
-    )
+  return (
+    <>
+      <Navbar/>
+      <EventsDashboard/>
+    </>
+  )
 }
-
-export default Home

@@ -1,16 +1,23 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './routes/Home';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { Home } from './routes/Home';
+import { Toaster } from "@/components/ui/sonner"
 import './App.css'
 
 function App() {
-    return (
-        <Router>
-            <Routes>
-                <Route path="/" element={<Home />} />
-                {/*<Route path="/events" element={<Events />} />*/}
-            </Routes>
-        </Router>
-    );
+  const router = createBrowserRouter([
+    { path: "/", element: <Home/> },
+    { path: "/profile" }
+  ]);
+
+  return (
+    <>
+
+      <div className="flex min-h-screen min-w-screen flex-col p-3">
+        <RouterProvider router={ router }/>
+        <Toaster/>
+      </div>
+    </>
+  );
 }
 
 export default App;
