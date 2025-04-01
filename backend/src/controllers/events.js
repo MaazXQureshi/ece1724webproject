@@ -1,11 +1,11 @@
 const {
-    createEvent,
-    getAllEvents,
-    getEventById,
-    updateEvent,
-    deleteEvent,
-    respondToEvent,
-    unregisterEvent,
+  createEvent,
+  getAllEvents,
+  getEventById,
+  updateEvent,
+  deleteEvent,
+  respondToEvent,
+  unregisterEvent,
 } = require('../database/events')
 
 const eventController = {
@@ -22,7 +22,7 @@ const eventController = {
     try {
       const filters = {
         name: req.query.name,
-        time: req.query.time,
+        date: req.query.date,
         location: req.query.location,
         hours: parseInt(req.query.hours, 10),
         tags: req.query.tags,
@@ -63,7 +63,7 @@ const eventController = {
       const updatedEvent = await updateEvent(eventId, eventData);
       return res.status(200).json(updatedEvent);
     } catch (error) {
-      return res.status(500).json({ });
+      return res.status(500).json({});
     }
   },
   deleteEvent: async (req, res) => {
@@ -83,9 +83,9 @@ const eventController = {
   },
   respondToEvent: async (req, res) => {
     try {
-      const { userId, eventId } = req.body;
+      const {userId, eventId} = req.body;
 
-      if (!Number.isInteger(userId) || userId <= 0 || !Number.isInteger(eventId) || eventId <= 0 ) {
+      if (!Number.isInteger(userId) || userId <= 0 || !Number.isInteger(eventId) || eventId <= 0) {
         return res.status(400).json({
           error: "Validation Error",
           message: "Invalid ID format",
@@ -100,9 +100,9 @@ const eventController = {
   },
   unregisterForEvent: async (req, res) => {
     try {
-      const { userId, eventId } = req.body;
+      const {userId, eventId} = req.body;
 
-      if (!Number.isInteger(userId) || userId <= 0 || !Number.isInteger(eventId) || eventId <= 0 ) {
+      if (!Number.isInteger(userId) || userId <= 0 || !Number.isInteger(eventId) || eventId <= 0) {
         return res.status(400).json({
           error: "Validation Error",
           message: "Invalid ID format",

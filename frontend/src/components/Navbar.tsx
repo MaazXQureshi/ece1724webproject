@@ -17,10 +17,10 @@ export const Navbar = () => {
                 </span>
             </h1>
           </Link>
-          <nav className="flex items-center space-x-4 lg:space-x-6 mx-6">
-            <Link to="/" className="text-base text-black font-medium  hover:text-primary">Events</Link>
-            <Link to="/profile" className="text-base text-black font-medium  hover:text-primary">Profile</Link>
-          </nav>
+          {/*<nav className="flex items-center space-x-4 lg:space-x-6 mx-6">*/ }
+          {/*  <Link to="/" className="text-base text-black font-medium  hover:text-primary">Events</Link>*/ }
+          {/*  <Link to="/profile" className="text-base text-black font-medium  hover:text-primary">Profile</Link>*/ }
+          {/*</nav>*/ }
         </div>
         <div className="ml-auto flex items-center space-x-4">
           <Button variant={ "secondary" }>Log in</Button>

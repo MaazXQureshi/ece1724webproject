@@ -1,4 +1,4 @@
-const { body, param, validationResult } = require("express-validator");
+const {body, param, validationResult} = require("express-validator");
 const jwt = require("jsonwebtoken");
 
 require("dotenv").config();
@@ -19,12 +19,12 @@ const validateEventData = [
   body("location").isString().withMessage("Event location is required"),
   body("clubId").isInt().withMessage("Organizer ID must be an integer"),
   body("info").optional().isString().withMessage("Event info must be a string"),
-  body("hours").isInt({ min: 0 }).withMessage("Event hours is required"),
+  body("hours").isInt({min: 0}).withMessage("Event hours is required"),
   body("imageUrl").optional().isURL().withMessage("Invalid image URL"),
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({errors: errors.array()});
     }
     next();
   },
@@ -34,10 +34,26 @@ const validateEventQuery = [
   body("name").optional().isString(),
   body("time").optional().isISO8601(),
   body("location").optional().isString(),
-  body("hours").optional().isInt({ min: 0 }),
-  body("tags").optional().isArray({ min: 0, max: 10 }), // can change max
-  body("limit").optional().isInt({ min: 1, max: 100 }),
-  body("offset").optional().isInt({ min: 0 }),
+  body("hours").optional().isInt({min: 0}),
+  body("tags").optional().isArray({min: 0, max: 10}), // can change max
+  body("limit").optional().isInt({min: 1, max: 100}),
+  body("offset").optional().isInt({min: 0}),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(401).json({
+        error: "Validation Error",
+        message: "Invalid query params",
+      });
+    }
+    next();
+  },
+];
+
+const validateTagQuery = [
+  body("name").optional().isString(),
+  body("limit").optional().isInt({min: 1, max: 100}),
+  body("offset").optional().isInt({min: 0}),
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -59,7 +75,7 @@ const validateOrganizerData = [
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({errors: errors.array()});
     }
     next();
   },
@@ -91,10 +107,10 @@ const errorHandler = (err, req, res) => {
 // Authentication Middleware
 const authenticate = (req, res, next) => {
   const token = req.cookies.token;
-  if (!token) return res.status(401).json({ error: "Unauthorized" });
+  if (!token) return res.status(401).json({error: "Unauthorized"});
 
   jwt.verify(token, JWT_SECRET, (err, decoded) => {
-    if (err) return res.status(403).json({ error: "Invalid token" });
+    if (err) return res.status(403).json({error: "Invalid token"});
     req.user = decoded;
     next();
   });
@@ -102,9 +118,9 @@ const authenticate = (req, res, next) => {
 
 // Middleware for admin access to specific routes
 const authorizeAdmin = (req, res, next) => {
-  const { id } = req.params;
+  const {id} = req.params;
   if (!req.user.isAdmin || req.user.id !== parseInt(id)) {
-    return res.status(403).json({ error: "Access denied" });
+    return res.status(403).json({error: "Access denied"});
   }
   next();
 };
@@ -121,6 +137,7 @@ module.exports = {
   validateResourceId,
   errorHandler,
   validateEventData,
+  validateTagQuery,
   validateEventQuery,
   validateOrganizerData,
   authenticate,

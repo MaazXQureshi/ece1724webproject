@@ -10,19 +10,21 @@ export interface getEventFilter {
   tags: string[];
 }
 
-export async function getEvents(filters: getEventFilter) {
+export async function getEvents(filters: getEventFilter, limit: number, offset: number) {
 
   const { eventName, eventLocation, date, hours, tags } = filters;
   try {
-    let queryString = '';
+    const params = new URLSearchParams();
 
-    if (eventName) queryString += `&name=${ eventName }`;
-    if (eventLocation) queryString += `&location=${ eventLocation }`;
-    if (date) queryString += `&date=${ date }`;
-    if (hours) queryString += `&hours=${ hours }`;
-    if (tags.length !== 0) queryString += `&tags=${ tags }`;
+    if (eventName) params.append("name", eventName);
+    if (eventLocation) params.append("location", eventLocation);
+    if (date) params.append("date", date.toLocaleString());
+    if (hours) params.append("hours", hours.toString());
+    tags.forEach(tag => params.append("tags", tag));
+    if (limit) params.append("limit", limit.toString());
+    if (offset) params.append("offset", offset.toString());
 
-    const response = await axios.get(`/api/events?${ queryString }`);
+    const response = await axios.get(`/api/events?${ params.toString() }`);
     const data = response.data;
     const parsedEvents: EventResponse = data.events.map((event: any) => ({
       ...event,
@@ -37,6 +39,26 @@ export async function getEvents(filters: getEventFilter) {
     return {
       ...data,
       events: parsedEvents,
+    };
+  } catch (err) {
+    console.log(err)
+    throw err;
+  }
+}
+
+
+export async function getTags(name: string) {
+  try {
+    const params = new URLSearchParams();
+    if (name) params.append("name", name);
+
+    const response = await axios.get(`/api/tags?${ params.toString() }`);
+    const data = response.data;
+    const parsedTags: EventResponse = data.events.map((tag: any) => (tag.name));
+
+    return {
+      ...data,
+      tags: parsedTags,
     };
   } catch (err) {
     console.log(err)

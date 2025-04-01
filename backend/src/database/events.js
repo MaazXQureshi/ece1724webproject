@@ -29,19 +29,19 @@ const dbOperations = {
     try {
       // filters
       // - name: string (partial match)
-      // - time: either date or time match
+      // - date: either date or time match
       // - location: string (partial match)
       // - hours: number
       // - tags: find all organizers associated with the tag (exact match)
       // - limit: number (default: 10)
       // - offset: number (default: 0)
 
-      const { name, time, location, tags, hours, limit = 10, offset = 0 } = filters;
+      const {name, date, location, tags, hours, limit = 10, offset = 0} = filters;
       const where = {};
 
       if (tags && tags.length > 0) {
         let orgIdsWithTags = [];
-        const tagFilter = Array.isArray(tags) ? tags: [tags];
+        const tagFilter = Array.isArray(tags) ? tags : [tags];
         const orgMatches = await prisma.orgTag.findMany({
           where: {
             tag: {
@@ -50,16 +50,15 @@ const dbOperations = {
           },
           select: {
             orgId: true
-          }
+          },
+          distinct: ['orgId']
         });
 
         orgIdsWithTags = orgMatches.map(orgMatched => orgMatched.orgId)
         console.log(orgMatches);
 
-        if (orgIdsWithTags.length > 0) {
-          where.clubId = {
-            in: orgIdsWithTags
-          }
+        where.clubId = {
+          in: orgIdsWithTags
         }
       }
 
@@ -81,14 +80,17 @@ const dbOperations = {
         where.hours = hours;
       }
 
-      // TODO: figure out how to match by date or time separately
-      if (time) {
+      if (date) {
+        let startOfDay = new Date(date)
+        let endOfDay = new Date(startOfDay);
+        endOfDay.setDate(endOfDay.getDate() + 1)
         where.time = {
-          gte: time,
+          gte: startOfDay,
+          lte: endOfDay
         }
       }
 
-      const total = await prisma.event.count({ where });
+      const total = await prisma.event.count({where});
 
       const events = await prisma.event.findMany({
         where,
@@ -109,7 +111,7 @@ const dbOperations = {
         orderBy: {id: "asc"},
       });
 
-      return { events, total, limit, offset };
+      return {events, total, limit, offset};
 
     } catch (error) {
       console.error(error);
@@ -119,7 +121,7 @@ const dbOperations = {
   getEventById: async (eventId) => {
     try {
       const event = await prisma.event.findUnique({
-        where: { id: eventId },
+        where: {id: eventId},
         include: {
           organizer: {
             include: {
@@ -144,7 +146,7 @@ const dbOperations = {
     try {
       console.log(eventData)
       const event = await prisma.event.update({
-        where: { id: eventId },
+        where: {id: eventId},
         data: {
           name: eventData.name,
           time: eventData.time,
@@ -178,12 +180,12 @@ const dbOperations = {
     try {
       // delete registrations, not needed if event is deleted
       await prisma.register.deleteMany({
-        where: { eventId },
+        where: {eventId},
       });
 
       // delete event
       await prisma.event.delete({
-        where: { id: eventId },
+        where: {id: eventId},
       });
     } catch (error) {
       console.error(error);
@@ -194,11 +196,11 @@ const dbOperations = {
     try {
       // check if the user and event ids exist
       const user = await prisma.user.findUnique({
-        where: { id: userId },
+        where: {id: userId},
       });
 
       const event = await prisma.event.findUnique({
-        where: { id: eventId },
+        where: {id: eventId},
       });
 
       if (!event || !user) {
@@ -220,7 +222,7 @@ const dbOperations = {
       }
 
       const response = await prisma.register.create({
-        data: { userId, eventId },
+        data: {userId, eventId},
         include: {
           event: true,
           user: true
@@ -236,11 +238,11 @@ const dbOperations = {
   unregisterEvent: async (userId, eventId) => {
     try {
       const user = await prisma.user.findUnique({
-        where: { id: userId },
+        where: {id: userId},
       });
 
       const event = await prisma.event.findUnique({
-        where: { id: eventId },
+        where: {id: eventId},
       });
 
       if (!event || !user) {

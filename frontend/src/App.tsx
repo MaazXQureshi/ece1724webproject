@@ -12,7 +12,7 @@ function App() {
   return (
     <>
 
-      <div className="flex min-h-screen min-w-screen flex-col p-3">
+      <div className="flex min-h-screen min-w-screen flex-col">
         <RouterProvider router={ router }/>
         <Toaster/>
       </div>
