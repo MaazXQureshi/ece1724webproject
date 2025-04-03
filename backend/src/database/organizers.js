@@ -24,14 +24,14 @@ const dbOperations = {
       throw err;
     }
   },
-  getOrganizerById: async (orgId) => {
+  getOrganizerById: async (id) => {
     try {
       const organizer = await prisma.organizer.findUnique({
-        where: { orgId },
+        where: { id },
         include: { admin: true, events: true, orgTags: true },
       });
 
-      if (!organizer) throw new Error("Organizer not found");
+      // if (!organizer) throw new Error("Organizer not found");
 
       return organizer;
     } catch (err) {
@@ -39,11 +39,22 @@ const dbOperations = {
       throw err;
     }
   },
-  updateOrganizer: async (orgId, orgData) => {
+  findExistingOrganizer: async (name) => {
+    try {
+      const existingOrg = await prisma.organizer.findFirst({
+        where: { name: name },
+      });
+
+      return existingOrg;
+    } catch (error) {
+      throw new Error("Error finding existing organizer: " + error.message);
+    }
+  },
+  updateOrganizer: async (id, data) => {
     try {
       const updatedOrganizer = await prisma.organizer.update({
-        where: { orgId },
-        orgData,
+        where: { id },
+        data,
       });
 
       return updatedOrganizer;

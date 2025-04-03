@@ -15,7 +15,9 @@ router.get("/:id", middleware.validateResourceId, controller.getOrganizerById);
 router.put(
   "/:id",
   middleware.validateResourceId,
-  middleware.validateOrganizerData,
+  // middleware.validateOrganizerData,
+  middleware.authenticate,
+  middleware.authorizeOrganizerAdmin,
   controller.updateOrganizer
 );
 router.delete(

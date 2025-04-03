@@ -20,6 +20,17 @@ const dbOperations = {
       throw new Error("Error creating user: " + error.message);
     }
   },
+  findExistingUser: async (email, username) => {
+    try {
+      const existingUser = await prisma.user.findFirst({
+        where: { OR: [{ email }, { username }] },
+      });
+
+      return existingUser;
+    } catch (error) {
+      throw new Error("Error finding existing user: " + error.message);
+    }
+  },
   getUserByEmail: async (email) => {
     try {
       return await prisma.user.findUnique({ where: { email } });
@@ -37,14 +48,16 @@ const dbOperations = {
       throw new Error("Error retrieving user by ID: " + error.message);
     }
   },
-  updateUserById: async (id, userData) => {
+  updateUserById: async (id, email, username) => {
     try {
       return await prisma.user.update({
         where: { id: parseInt(id) },
         data: {
-          email: userData.email,
-          username: userData.username,
-          admin: userData.admin,
+          email,
+          username,
+        },
+        include: {
+          organizer: true,
         },
       });
     } catch (error) {
