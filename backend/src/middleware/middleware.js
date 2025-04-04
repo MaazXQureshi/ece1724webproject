@@ -1,6 +1,9 @@
 const { body, param, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const userDb = require("../database/user");
+const { S3Client, ListBucketsCommand } = require("@aws-sdk/client-s3");
+const multer = require("multer");
+const multerS3 = require("multer-s3");
 
 require("dotenv").config();
 
@@ -13,6 +16,34 @@ const requestLogger = (req, res, next) => {
 function isEmpty(str) {
   return !str || str.trim().length === 0;
 }
+
+// Configure DigitalOcean Spaces
+// const s3 = new S3Client({
+//   endpoint: new S3Client.Endpoint(process.env.DO_SPACES_ENDPOINT),
+//   accessKeyId: process.env.DO_SPACES_KEY,
+//   secretAccessKey: process.env.DO_SPACES_SECRET,
+// });
+
+const s3 = new S3Client({
+  region: "us-east-1",
+  endpoint: process.env.DO_SPACES_ENDPOINT,
+  credentials: {
+    accessKeyId: process.env.DO_SPACES_KEY,
+    secretAccessKey: process.env.DO_SPACES_SECRET,
+  },
+});
+
+// Multer setup for file uploads
+const upload = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: process.env.DO_SPACES_NAME,
+    acl: "public-read",
+    key: (req, file, cb) => {
+      cb(null, `uploads/${Date.now()}-${file.originalname}`);
+    },
+  }),
+});
 
 const validateEventData = [
   body("name").notEmpty().withMessage("Event name is required"),
@@ -172,4 +203,5 @@ module.exports = {
   authenticate,
   authorizeOrganizerAdmin,
   authorizeUser,
+  upload: upload.single("image"),
 };

@@ -4,11 +4,13 @@ const eventRoutes = require("./events");
 const organizerRoutes = require("./organizers");
 const userRoutes = require("./user");
 const tagsRoutes = require("./tags");
+const uploadRoutes = require("./upload");
 
 // Mount routes
 router.use("/events", eventRoutes);
 router.use("/organizers", organizerRoutes);
 router.use("/user", userRoutes);
 router.use("/tags", tagsRoutes);
+router.use("/upload", uploadRoutes);
 
 module.exports = router;

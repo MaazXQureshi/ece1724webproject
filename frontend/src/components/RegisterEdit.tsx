@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { User } from "@/models/user.model.ts";
 import { Organizer } from "@/models/organizer.model.ts";
 import { getTagsFull } from "@/api/events.data.ts";
+import { ImageUploadField } from "@/components/ImageUploadField";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -17,6 +18,7 @@ import {
 } from "@/components/ui/dropdown-menu.tsx";
 import { Filter, Search, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge.tsx";
+import axios from "axios";
 
 interface RegisterEditProps {
   isEditing: boolean; // Determines whether we are editing or registering a new user
@@ -41,6 +43,7 @@ const RegisterEdit: React.FC<RegisterEditProps> = ({ isEditing }) => {
     { id: number; name: string }[]
   >([]); // Selected tags
   // const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]); // Store selected tag IDs
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -93,56 +96,82 @@ const RegisterEdit: React.FC<RegisterEditProps> = ({ isEditing }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (isEditing && user) {
-      // Update existing user
-      const updatedUser: User = {
-        ...user,
-        email,
-        username,
-        passwordHash: user.passwordHash, // Do not change password
-      };
+    try {
+      // Image handling
+      if (organizerData) {
+        // TODO: Add loading state
+        let uploadedImageUrl = organizerData?.imageUrl; // default to existing image (we don't want to overwrite if there is no uploaded image)
+        console.log("Uploading image");
+        if (selectedImage) {
+          const formData = new FormData();
+          formData.append("image", selectedImage);
 
-      const selectedTagIds = selectedTags.map((tag) => tag.id); // Convert to IDs
-      const response = await updateUserAndOrganizer(
-        updatedUser,
-        organizerData,
-        selectedTagIds
-      );
-      if (response.success) {
-        console.log("Updated user/organizer");
-        setError("");
-        setMessage("User successfully updated.");
-        console.log("Before timeout navigation");
-        // TODO: There's a bug that doesn't wait for 2 seconds before navigating, but only for organizer edits not user edits
-        // Not sure what the issue is, but the update goes through successfully
-        setTimeout(() => {
-          navigate("/");
-        }, 2000);
-      } else {
-        setError(response.message);
+          const uploadRes = await axios.post("/api/upload", formData);
+          uploadedImageUrl = uploadRes.data.imageUrl;
+          console.log("Image URL: ", uploadedImageUrl);
+        }
+        organizerData.imageUrl = uploadedImageUrl;
       }
-    } else {
-      // TODO: Field validation on frontend side + Loading states
-      // Register a new user
-      const selectedTagIds = selectedTags.map((tag) => tag.id); // Convert to IDs
-      const response = await registerUser(
-        email,
-        username,
-        password,
-        isAdmin,
-        organizerData,
-        selectedTagIds
-      );
 
-      if (response.success) {
-        setError("");
-        setMessage("User successfully registered. Please login to continue");
-        setTimeout(() => {
-          navigate("/login");
-        }, 2000);
+      console.log("After uploading orgData:");
+      console.log(organizerData);
+
+      // UPDATE CASE
+      if (isEditing && user) {
+        // Update existing user
+        const updatedUser: User = {
+          ...user,
+          email,
+          username,
+          passwordHash: user.passwordHash, // Do not change password
+        };
+
+        const selectedTagIds = selectedTags.map((tag) => tag.id); // Convert to IDs
+        const response = await updateUserAndOrganizer(
+          updatedUser,
+          organizerData,
+          selectedTagIds
+        );
+        if (response.success) {
+          console.log("Updated user/organizer");
+          setError("");
+          setMessage("User successfully updated.");
+          console.log("Before timeout navigation");
+          // TODO: There's a bug that doesn't wait for 2 seconds before navigating, but only for organizer edits not user edits
+          // Not sure what the issue is, but the update goes through successfully
+          setTimeout(() => {
+            navigate("/");
+          }, 2000);
+        } else {
+          setError(response.message);
+        }
       } else {
-        setError(response.message);
+        // REGISTER CASE
+        // TODO: Field validation on frontend side + Loading states
+        // Register a new user
+        const selectedTagIds = selectedTags.map((tag) => tag.id); // Convert to IDs
+        const response = await registerUser(
+          email,
+          username,
+          password,
+          isAdmin,
+          organizerData,
+          selectedTagIds
+        );
+
+        if (response.success) {
+          setError("");
+          setMessage("User successfully registered. Please login to continue");
+          setTimeout(() => {
+            navigate("/login");
+          }, 2000);
+        } else {
+          setError(response.message);
+        }
       }
+    } catch (error) {
+      console.error(error);
+      setError("Unknown error occured. Please try again.");
     }
   };
 
@@ -305,7 +334,7 @@ const RegisterEdit: React.FC<RegisterEditProps> = ({ isEditing }) => {
               />
             </div>
 
-            <div>
+            {/* <div>
               <Label
                 htmlFor="organizerImage"
                 className="block text-sm font-medium text-gray-700"
@@ -324,7 +353,8 @@ const RegisterEdit: React.FC<RegisterEditProps> = ({ isEditing }) => {
                 }
                 className="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
               />
-            </div>
+            </div> */}
+            <ImageUploadField onFileSelect={(file) => setSelectedImage(file)} />
             <div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
