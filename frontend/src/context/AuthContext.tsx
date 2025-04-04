@@ -9,6 +9,7 @@ import axios from "axios";
 
 import { User } from "@/models/user.model.ts";
 import { Organizer } from "@/models/organizer.model.ts";
+import { Tag } from "@/models/tag.model.ts";
 
 interface AuthContextType {
   user: User | null;
@@ -23,11 +24,13 @@ interface AuthContextType {
     username: string,
     password: string,
     isAdmin: boolean,
-    organizerData?: Organizer | undefined
+    organizerData?: Organizer | undefined,
+    tagIds?: number[]
   ) => Promise<{ success: boolean; message: string }>;
   updateUserAndOrganizer: (
     userData: User,
-    organizerData?: Organizer
+    organizerData?: Organizer,
+    tagIds?: number[]
   ) => Promise<{ success: boolean; message: string }>;
 }
 
@@ -107,7 +110,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     username: string,
     password: string,
     isAdmin: boolean,
-    organizerData?: Organizer
+    organizerData?: Organizer,
+    tagIds?: number[]
   ) => {
     try {
       const res = await axios.post("/api/user/register", {
@@ -116,6 +120,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         password,
         admin: isAdmin,
         organizerData,
+        tagIds,
       });
 
       if (res.status !== 200) {
@@ -141,7 +146,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const updateUserAndOrganizer = async (
     userData: User,
-    organizerData?: Organizer
+    organizerData?: Organizer,
+    tagIds?: number[]
   ) => {
     try {
       // First, update the user
@@ -158,9 +164,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       // If user is an admin and organizer data is provided, update the organizer
       if (userData.admin && organizerData) {
         console.log("User is admin - updating organizer form");
+        console.log("organizer data", organizerData);
+        console.log("tag ids", tagIds);
         const organizerResponse = await axios.put(
           `/api/organizers/${organizerData.id}`,
-          organizerData,
+          { ...organizerData, tagIds },
           { withCredentials: true }
         );
 

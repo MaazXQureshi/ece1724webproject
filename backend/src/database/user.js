@@ -42,7 +42,17 @@ const dbOperations = {
     try {
       return await prisma.user.findUnique({
         where: { id: parseInt(id) },
-        include: { organizer: true },
+        include: {
+          organizer: {
+            include: {
+              orgTags: {
+                include: {
+                  tag: true,
+                },
+              },
+            },
+          },
+        },
       });
     } catch (error) {
       throw new Error("Error retrieving user by ID: " + error.message);

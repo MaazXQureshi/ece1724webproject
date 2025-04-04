@@ -1,3 +1,5 @@
+import { OrgTag } from "@/models/orgtag.model.ts";
+
 export interface Organizer {
   id: number;
   name: string;
@@ -5,5 +7,5 @@ export interface Organizer {
   email?: string | null;
   phone?: string | null;
   imageUrl?: string;
-  tags?: string[];
+  orgTags?: OrgTag[];
 }

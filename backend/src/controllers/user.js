@@ -1,5 +1,6 @@
 const userDb = require("../database/user");
 const orgDb = require("../database/organizers");
+const tagDb = require("../database/tags");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
@@ -7,9 +8,10 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const userController = {
-  // TODO: Need to add better error checking
+  // TODO: Need to add better error checking. Also add returning of registrations/organizer/tags
   registerUser: async (req, res) => {
-    const { email, username, password, admin, organizerData } = req.body;
+    const { email, username, password, admin, organizerData, tagIds } =
+      req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
     const userData = {
       email,
@@ -28,6 +30,7 @@ const userController = {
       if (admin) {
         console.log("Org Data to be registered");
         console.log(organizerData);
+        console.log("Tag IDs ", tagIds);
         const existingOrg = await orgDb.findExistingOrganizer(
           organizerData.name
         );
@@ -51,7 +54,10 @@ const userController = {
           imageUrl: organizerData.imageUrl,
           adminId: user.id,
         };
-        await orgDb.createOrganizer(organizerDbData);
+        const organizer = await orgDb.createOrganizer(organizerDbData);
+
+        // Now that organizer has been created, add the tags
+        const orgTags = await tagDb.createOrgTags(tagIds, organizer.id);
       }
       res.json({ message: "User registered successfully" });
     } catch (error) {

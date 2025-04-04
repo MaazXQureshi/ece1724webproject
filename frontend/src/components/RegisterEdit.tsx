@@ -9,6 +9,14 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import { User } from "@/models/user.model.ts";
 import { Organizer } from "@/models/organizer.model.ts";
+import { getTagsFull } from "@/api/events.data.ts";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+} from "@/components/ui/dropdown-menu.tsx";
+import { Filter, Search, X } from "lucide-react";
+import { Badge } from "@/components/ui/badge.tsx";
 
 interface RegisterEditProps {
   isEditing: boolean; // Determines whether we are editing or registering a new user
@@ -25,6 +33,14 @@ const RegisterEdit: React.FC<RegisterEditProps> = ({ isEditing }) => {
   const [organizerData, setOrganizerData] = useState<Organizer | undefined>(
     undefined
   );
+  const [tagSearchTerm, setTagSearchTerm] = useState<string>(""); // Search input
+  const [availableTags, setAvailableTags] = useState<
+    { id: number; name: string }[]
+  >([]); // Available tags
+  const [selectedTags, setSelectedTags] = useState<
+    { id: number; name: string }[]
+  >([]); // Selected tags
+  // const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]); // Store selected tag IDs
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -33,9 +49,46 @@ const RegisterEdit: React.FC<RegisterEditProps> = ({ isEditing }) => {
       setUsername(user.username);
       if (user.organizer) {
         setOrganizerData(user.organizer); // Populate organizer data if user is an admin
+        if (user.organizer.orgTags) {
+          console.log(
+            "User is organizer with following tags: ",
+            user.organizer.orgTags
+          );
+          const existingTags = user.organizer.orgTags.map(
+            (orgTag) => orgTag.tag
+          );
+          setSelectedTags(existingTags);
+        }
       }
     }
   }, [isEditing, user]);
+
+  useEffect(() => {
+    const fetchTags = async () => {
+      try {
+        const response = await getTagsFull(tagSearchTerm); // Fetch from API
+        console.log("Fetched Tags:", response.tags);
+        setAvailableTags(response.tags); // Store the fetched tags
+      } catch (err) {
+        console.error("Error fetching tags:", err);
+      }
+    };
+
+    fetchTags();
+  }, [tagSearchTerm]); // Runs whenever the user types
+
+  const toggleTagSelection = (tag: { id: number; name: string }) => {
+    setSelectedTags(
+      (prevTags) =>
+        prevTags.some((t) => t.id === tag.id)
+          ? prevTags.filter((t) => t.id !== tag.id) // Remove if already selected
+          : [...prevTags, tag] // Add if not selected
+    );
+  };
+
+  const removeTag = (tagId: number) => {
+    setSelectedTags((prevTags) => prevTags.filter((t) => t.id !== tagId));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,7 +102,12 @@ const RegisterEdit: React.FC<RegisterEditProps> = ({ isEditing }) => {
         passwordHash: user.passwordHash, // Do not change password
       };
 
-      const response = await updateUserAndOrganizer(updatedUser, organizerData);
+      const selectedTagIds = selectedTags.map((tag) => tag.id); // Convert to IDs
+      const response = await updateUserAndOrganizer(
+        updatedUser,
+        organizerData,
+        selectedTagIds
+      );
       if (response.success) {
         console.log("Updated user/organizer");
         setError("");
@@ -66,12 +124,14 @@ const RegisterEdit: React.FC<RegisterEditProps> = ({ isEditing }) => {
     } else {
       // TODO: Field validation on frontend side + Loading states
       // Register a new user
+      const selectedTagIds = selectedTags.map((tag) => tag.id); // Convert to IDs
       const response = await registerUser(
         email,
         username,
         password,
         isAdmin,
-        organizerData
+        organizerData,
+        selectedTagIds
       );
 
       if (response.success) {
@@ -264,6 +324,67 @@ const RegisterEdit: React.FC<RegisterEditProps> = ({ isEditing }) => {
                 }
                 className="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
               />
+            </div>
+            <div>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="gap-2">
+                    <Filter className="h-4 w-4" />
+                    Tags
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-64 p-2">
+                  <div className="flex flex-col gap-2">
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                      <Input
+                        placeholder="Search tags..."
+                        className="pl-10"
+                        value={tagSearchTerm}
+                        onChange={(e) => setTagSearchTerm(e.target.value)}
+                      />
+                    </div>
+
+                    {/* Show "No tags found" if there are no available tags */}
+                    {availableTags.length === 0 ? (
+                      <p className="text-muted-foreground text-sm p-2">
+                        No tags found
+                      </p>
+                    ) : (
+                      <div className="flex flex-wrap gap-2 pt-2">
+                        {availableTags.map((tag) => (
+                          <Badge
+                            key={tag.id}
+                            variant={
+                              selectedTags.some((t) => t.id === tag.id)
+                                ? "secondary"
+                                : "outline"
+                            }
+                            className="cursor-pointer hover:bg-secondary"
+                            onClick={() => toggleTagSelection(tag)}
+                          >
+                            {tag.name}
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+            <div className="flex flex-wrap gap-2 pt-2">
+              {selectedTags.map((tag) => (
+                <Badge key={tag.id} className="gap-1">
+                  {tag.name}
+                  <Button
+                    variant="ghost"
+                    className="w-3 h-3"
+                    onClick={() => removeTag(tag.id)}
+                  >
+                    <X className="h-3 w-3 cursor-pointer" />
+                  </Button>
+                </Badge>
+              ))}
             </div>
           </div>
         )}

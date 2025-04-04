@@ -1,11 +1,18 @@
 import { Input } from "@/components/ui/input.tsx";
-import { Calendar as CalendarIcon, MapPin, Clock, Filter, Search, X } from 'lucide-react'
+import {
+  Calendar as CalendarIcon,
+  MapPin,
+  Clock,
+  Filter,
+  Search,
+  X,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
-  DropdownMenuContent
+  DropdownMenuContent,
 } from "@/components/ui/dropdown-menu.tsx";
-import { Calendar } from "@/components/ui/calendar"
+import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button.tsx";
 import { Badge } from "@/components/ui/badge.tsx";
 import { format } from "date-fns";
@@ -13,24 +20,24 @@ import { getEventFilter, getTags } from "@/api/events.data.ts";
 import { useEffect, useState } from "react";
 
 export interface ISearchBar {
-  filters: getEventFilter,
-  setFilters: (filters: getEventFilter) => void,
+  filters: getEventFilter;
+  setFilters: (filters: getEventFilter) => void;
 }
 
 export const SearchBar = ({ filters, setFilters }: ISearchBar) => {
-  const [tempName, setTempName] = useState<string>('');
-  const [tempLocation, setTempLocation] = useState<string>('');
-  const [tagSearchTerm, setTagSearchTerm] = useState<string>('');
-  const [availableTags, setAvailableTags] = useState<string[]>([])
+  const [tempName, setTempName] = useState<string>("");
+  const [tempLocation, setTempLocation] = useState<string>("");
+  const [tagSearchTerm, setTagSearchTerm] = useState<string>("");
+  const [availableTags, setAvailableTags] = useState<string[]>([]);
 
   const setNameFilter = (eventName: string) => {
     setFilters({ ...filters, eventName });
-    setTempName('');
+    setTempName("");
   };
 
   const setLocationFilter = (eventLocation: string) => {
     setFilters({ ...filters, eventLocation });
-    setTempLocation('');
+    setTempLocation("");
   };
 
   const setDateFilter = (date: Date | undefined) => {
@@ -47,11 +54,11 @@ export const SearchBar = ({ filters, setFilters }: ISearchBar) => {
 
   const clearFilters = () => {
     setFilters({
-      eventName: '',
-      eventLocation: '',
+      eventName: "",
+      eventLocation: "",
       date: undefined,
       hours: undefined,
-      tags: []
+      tags: [],
     });
   };
 
@@ -69,92 +76,90 @@ export const SearchBar = ({ filters, setFilters }: ISearchBar) => {
     filterTags();
   }, [tagSearchTerm]);
 
-
   return (
-
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center gap-2">
-        {/* Name Filter */ }
+        {/* Name Filter */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="gap-2">
-              <Search className="h-4 w-4"/>
+              <Search className="h-4 w-4" />
               Name
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="mx-7 w-64 p-2">
             <div className="flex flex-col gap-2">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"/>
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   placeholder="Search event names..."
                   className="pl-10"
-                  value={ tempName }
-                  onChange={ (e) => setTempName(e.target.value) }
+                  value={tempName}
+                  onChange={(e) => setTempName(e.target.value)}
                 />
               </div>
-              <Button onClick={ () => setNameFilter(tempName) }>
-                Add
-              </Button>
+              <Button onClick={() => setNameFilter(tempName)}>Add</Button>
             </div>
           </DropdownMenuContent>
         </DropdownMenu>
 
-        {/* Location Filter */ }
+        {/* Location Filter */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="gap-2">
-              <MapPin className="h-4 w-4"/>
+              <MapPin className="h-4 w-4" />
               Location
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-64 p-2">
             <div className="flex flex-col gap-2">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"/>
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   placeholder="Search event locations..."
                   className="pl-10"
-                  value={ tempLocation }
-                  onChange={ (e) => setTempLocation(e.target.value) }
+                  value={tempLocation}
+                  onChange={(e) => setTempLocation(e.target.value)}
                 />
               </div>
-              <Button onClick={ () => setLocationFilter(tempLocation) }>
+              <Button onClick={() => setLocationFilter(tempLocation)}>
                 Add
               </Button>
             </div>
           </DropdownMenuContent>
         </DropdownMenu>
 
-        {/* Hours Filter */ }
+        {/* Hours Filter */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="gap-2">
-              <Clock className="h-4 w-4"/>
+              <Clock className="h-4 w-4" />
               Hours
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-48 p-2">
             <div className="grid grid-cols-2 gap-2">
-              { [1, 2, 3, 4, 5, 6].map((hours) => (
+              {[1, 2, 3, 4, 5, 6].map((hours) => (
                 <Button
-                  key={ hours }
-                  variant={ filters.hours === hours ? 'default' : 'ghost' }
+                  key={hours}
+                  variant={filters.hours === hours ? "default" : "ghost"}
                   size="sm"
-                  onClick={ () => setHoursFilter(filters.hours === hours ? undefined : hours) }
+                  onClick={() =>
+                    setHoursFilter(filters.hours === hours ? undefined : hours)
+                  }
                 >
-                  { hours }
+                  {hours}
                 </Button>
-              )) }
+              ))}
             </div>
           </DropdownMenuContent>
         </DropdownMenu>
 
-        {/* Date Filter */ }
+        {/* Date Filter */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="gap-2">
-              <CalendarIcon className="h-4 w-4"/>
+              <CalendarIcon className="h-4 w-4" />
               Date
             </Button>
           </DropdownMenuTrigger>
@@ -163,106 +168,134 @@ export const SearchBar = ({ filters, setFilters }: ISearchBar) => {
               <p className="text-sm font-medium mb-2">Date</p>
               <Calendar
                 mode="single"
-                selected={ filters.date }
-                onDayClick={ setDateFilter }
+                selected={filters.date}
+                onDayClick={setDateFilter}
                 className="rounded-md border"
               />
             </div>
           </DropdownMenuContent>
         </DropdownMenu>
 
-        {/* Tags Filter */ }
+        {/* Tags Filter */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="gap-2">
-              <Filter className="h-4 w-4"/>
+              <Filter className="h-4 w-4" />
               Tags
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-64 p-2">
             <div className="flex flex-col gap-2">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"/>
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   placeholder="Search tags..."
                   className="pl-10"
-                  value={ tagSearchTerm }
-                  onChange={ (e) => setTagSearchTerm(e.target.value) }
+                  value={tagSearchTerm}
+                  onChange={(e) => setTagSearchTerm(e.target.value)}
                 />
               </div>
               <div className="flex flex-wrap gap-2 pt-2">
-                { availableTags.map((tag) => (
+                {availableTags.map((tag) => (
                   <Badge
-                    key={ tag }
-                    variant={ filters.tags.includes(tag) ? 'secondary' : 'outline' }
+                    key={tag}
+                    variant={
+                      filters.tags.includes(tag) ? "secondary" : "outline"
+                    }
                     className="cursor-pointer hover:bg-secondary"
-                    onClick={ () =>
-                      setTagsFilter(filters.tags.includes(tag)
-                        ? filters.tags.filter(t => t !== tag)
-                        : [...filters.tags, tag]
+                    onClick={() =>
+                      setTagsFilter(
+                        filters.tags.includes(tag)
+                          ? filters.tags.filter((t) => t !== tag)
+                          : [...filters.tags, tag]
                       )
                     }
                   >
-                    { tag }
+                    {tag}
                   </Badge>
-                )) }
+                ))}
               </div>
             </div>
           </DropdownMenuContent>
         </DropdownMenu>
 
-        { (filters.eventName || filters.eventLocation || filters.date || filters.hours || filters.tags.length > 0) && (
-          <Button variant="ghost" onClick={ clearFilters } className="gap-1">
-            <X className="h-4 w-4"/>
+        {(filters.eventName ||
+          filters.eventLocation ||
+          filters.date ||
+          filters.hours ||
+          filters.tags.length > 0) && (
+          <Button variant="ghost" onClick={clearFilters} className="gap-1">
+            <X className="h-4 w-4" />
             Clear filters
           </Button>
-        ) }
+        )}
       </div>
 
-      {/* Active filters display */ }
+      {/* Active filters display */}
       <div className="flex flex-wrap gap-2">
-        { filters.eventName && (
+        {filters.eventName && (
           <Badge className="gap-1">
-            Name: { filters.eventName }
-            <Button variant={ "ghost" } className="w-3 h-3" onClick={ () => setNameFilter('') }>
-              <X className="h-3 w-3 cursor-pointer"/>
+            Name: {filters.eventName}
+            <Button
+              variant={"ghost"}
+              className="w-3 h-3"
+              onClick={() => setNameFilter("")}
+            >
+              <X className="h-3 w-3 cursor-pointer" />
             </Button>
           </Badge>
-        ) }
-        { filters.eventLocation && (
+        )}
+        {filters.eventLocation && (
           <Badge className="gap-1">
-            Location: { filters.eventLocation }
-            <Button variant={ "ghost" } className="w-3 h-3" onClick={ () => setLocationFilter('') }>
-              <X className="h-3 w-3 cursor-pointer"/>
+            Location: {filters.eventLocation}
+            <Button
+              variant={"ghost"}
+              className="w-3 h-3"
+              onClick={() => setLocationFilter("")}
+            >
+              <X className="h-3 w-3 cursor-pointer" />
             </Button>
           </Badge>
-        ) }
-        { filters.date && (
+        )}
+        {filters.date && (
           <Badge className="gap-1">
-            Date: { format(filters.date, 'MMM dd, yyyy') }
-            <Button variant={ "ghost" } className="w-3 h-3" onClick={ () => setDateFilter(undefined) }>
-              <X className="h-3 w-3 cursor-pointer"/>
+            Date: {format(filters.date, "MMM dd, yyyy")}
+            <Button
+              variant={"ghost"}
+              className="w-3 h-3"
+              onClick={() => setDateFilter(undefined)}
+            >
+              <X className="h-3 w-3 cursor-pointer" />
             </Button>
           </Badge>
-        ) }
-        { filters.hours && (
+        )}
+        {filters.hours && (
           <Badge className="gap-1">
-            Hours: { filters.hours }
-            <Button variant={ "ghost" } className="w-3 h-3" onClick={ () => setHoursFilter(undefined) }>
-              <X className="h-3 w-3 cursor-pointer"/>
+            Hours: {filters.hours}
+            <Button
+              variant={"ghost"}
+              className="w-3 h-3"
+              onClick={() => setHoursFilter(undefined)}
+            >
+              <X className="h-3 w-3 cursor-pointer" />
             </Button>
           </Badge>
-        ) }
-        { filters.tags.map(tag => (
-          <Badge key={ tag } className="gap-1">
-            { tag }
-            <Button variant={ "ghost" } className="w-3 h-3"
-                    onClick={ () => setTagsFilter(filters.tags.filter(t => t !== tag)) }>
-              <X className="h-3 w-3 cursor-pointer"/>
+        )}
+        {filters.tags.map((tag) => (
+          <Badge key={tag} className="gap-1">
+            {tag}
+            <Button
+              variant={"ghost"}
+              className="w-3 h-3"
+              onClick={() =>
+                setTagsFilter(filters.tags.filter((t) => t !== tag))
+              }
+            >
+              <X className="h-3 w-3 cursor-pointer" />
             </Button>
           </Badge>
-        )) }
+        ))}
       </div>
     </div>
-  )
-}
+  );
+};

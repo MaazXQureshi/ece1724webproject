@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios";
 import { EventResponse } from "@/models/event.model.ts";
 import { formatDate, formatTime } from "@/utils/helpers.tsx";
 
@@ -10,8 +10,11 @@ export interface getEventFilter {
   tags: string[];
 }
 
-export async function getEvents(filters: getEventFilter, limit: number, offset: number) {
-
+export async function getEvents(
+  filters: getEventFilter,
+  limit: number,
+  offset: number
+) {
   const { eventName, eventLocation, date, hours, tags } = filters;
   try {
     const params = new URLSearchParams();
@@ -20,11 +23,11 @@ export async function getEvents(filters: getEventFilter, limit: number, offset: 
     if (eventLocation) params.append("location", eventLocation);
     if (date) params.append("date", date.toLocaleString());
     if (hours) params.append("hours", hours.toString());
-    tags.forEach(tag => params.append("tags", tag));
+    tags.forEach((tag) => params.append("tags", tag));
     if (limit) params.append("limit", limit.toString());
     if (offset) params.append("offset", offset.toString());
 
-    const response = await axios.get(`/api/events?${ params.toString() }`);
+    const response = await axios.get(`/api/events?${params.toString()}`);
     const data = response.data;
     const parsedEvents: EventResponse = data.events.map((event: any) => ({
       ...event,
@@ -32,36 +35,54 @@ export async function getEvents(filters: getEventFilter, limit: number, offset: 
       time: formatTime(event.time),
       organizer: {
         ...event.organizer,
-        tags: event.organizer.orgTags.map((tag: any) => (tag.tag.name))
-      }
-    }))
+        tags: event.organizer.orgTags.map((tag: any) => tag.tag.name),
+      },
+    }));
 
     return {
       ...data,
       events: parsedEvents,
     };
   } catch (err) {
-    console.log(err)
+    console.log(err);
     throw err;
   }
 }
-
 
 export async function getTags(name: string) {
   try {
     const params = new URLSearchParams();
     if (name) params.append("name", name);
 
-    const response = await axios.get(`/api/tags?${ params.toString() }`);
+    const response = await axios.get(`/api/tags?${params.toString()}`);
     const data = response.data;
-    const parsedTags: EventResponse = data.events.map((tag: any) => (tag.name));
+    const parsedTags: EventResponse = data.events.map((tag: any) => tag.name);
 
     return {
       ...data,
       tags: parsedTags,
     };
   } catch (err) {
-    console.log(err)
+    console.log(err);
+    throw err;
+  }
+}
+
+export async function getTagsFull(name: string) {
+  try {
+    const params = new URLSearchParams();
+    if (name) params.append("name", name);
+
+    const response = await axios.get(`/api/tags?${params.toString()}`);
+    const data = response.data;
+    const parsedTags: EventResponse = data.events.map((tag: any) => tag);
+
+    return {
+      ...data,
+      tags: parsedTags,
+    };
+  } catch (err) {
+    console.log(err);
     throw err;
   }
 }

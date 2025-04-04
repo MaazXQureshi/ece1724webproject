@@ -51,10 +51,12 @@ const dbOperations = {
     }
   },
   updateOrganizer: async (id, data) => {
+    const { orgTags, ...dataToUpdate } = data; // Ignoring orgTags as we update this in the other database
     try {
+      console.log("Attempting to prisma organizer update");
       const updatedOrganizer = await prisma.organizer.update({
         where: { id },
-        data,
+        data: dataToUpdate,
       });
 
       return updatedOrganizer;
