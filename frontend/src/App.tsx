@@ -6,6 +6,8 @@ import LoginPage from "@/routes/LoginPage";
 import RegisterEdit from "./components/RegisterEdit";
 import EditUser from "@/routes/EditUser";
 import EditOrganizer from "@/routes/EditOrganizer";
+import CreateEvent from "@/routes/CreateEvent";
+import EditEvent from "@/routes/EditEvent";
 
 function App() {
   const router = createBrowserRouter([
@@ -20,6 +22,14 @@ function App() {
     {
       path: "/organizer/edit/:id",
       element: <EditOrganizer />,
+    },
+    {
+      path: "/event/create",
+      element: <CreateEvent />,
+    },
+    {
+      path: "/event/edit/:id",
+      element: <EditEvent />,
     },
   ]);
 

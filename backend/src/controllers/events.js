@@ -6,12 +6,14 @@ const {
   deleteEvent,
   respondToEvent,
   unregisterEvent,
-} = require('../database/events')
+} = require("../database/events");
 
 const eventController = {
   createEvent: async (req, res) => {
     try {
       const eventData = req.body;
+      console.log("In create event with data:");
+      console.log(eventData);
       const event = await createEvent(eventData);
       return res.status(201).json(event);
     } catch (error) {
@@ -27,7 +29,7 @@ const eventController = {
         hours: parseInt(req.query.hours, 10),
         tags: req.query.tags,
         limit: parseInt(req.query.limit, 10) || 10,
-        offset: parseInt(req.query.offset, 10) || 0
+        offset: parseInt(req.query.offset, 10) || 0,
       }; // Extract filters from query parameters
 
       const events = await getAllEvents(filters);
@@ -42,7 +44,7 @@ const eventController = {
       const event = await getEventById(eventId);
 
       if (!event) {
-        return res.status(404).json({})
+        return res.status(404).json({});
       }
 
       return res.status(200).json(event);
@@ -57,7 +59,7 @@ const eventController = {
 
       const event = await getEventById(eventId);
       if (!event) {
-        return res.status(404).json({})
+        return res.status(404).json({});
       }
 
       const updatedEvent = await updateEvent(eventId, eventData);
@@ -72,7 +74,7 @@ const eventController = {
 
       const event = await getEventById(eventId);
       if (!event) {
-        return res.status(404).json({})
+        return res.status(404).json({});
       }
 
       await deleteEvent(eventId);
@@ -83,9 +85,14 @@ const eventController = {
   },
   respondToEvent: async (req, res) => {
     try {
-      const {userId, eventId} = req.body;
+      const { userId, eventId } = req.body;
 
-      if (!Number.isInteger(userId) || userId <= 0 || !Number.isInteger(eventId) || eventId <= 0) {
+      if (
+        !Number.isInteger(userId) ||
+        userId <= 0 ||
+        !Number.isInteger(eventId) ||
+        eventId <= 0
+      ) {
         return res.status(400).json({
           error: "Validation Error",
           message: "Invalid ID format",
@@ -100,9 +107,14 @@ const eventController = {
   },
   unregisterForEvent: async (req, res) => {
     try {
-      const {userId, eventId} = req.body;
+      const { userId, eventId } = req.body;
 
-      if (!Number.isInteger(userId) || userId <= 0 || !Number.isInteger(eventId) || eventId <= 0) {
+      if (
+        !Number.isInteger(userId) ||
+        userId <= 0 ||
+        !Number.isInteger(eventId) ||
+        eventId <= 0
+      ) {
         return res.status(400).json({
           error: "Validation Error",
           message: "Invalid ID format",

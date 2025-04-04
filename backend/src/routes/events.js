@@ -12,13 +12,13 @@ const middleware = require("../middleware/middleware");
 // POST /events/:id/register - Register a user for an event (RSVP)
 // TODO: GET /user-events - Get all events that a user registered for
 
-router.post("/", middleware.validateEventData, controller.createEvent);
+router.post("/", /*middleware.validateEventData,*/ controller.createEvent);
 router.get("/", middleware.validateEventQuery, controller.getAllEvents);
 router.get("/:id", middleware.validateResourceId, controller.getEventById);
 router.put(
   "/:id",
   middleware.validateResourceId,
-  middleware.validateEventData,
+  // middleware.validateEventData,
   controller.updateEvent
 );
 router.delete("/:id", middleware.validateResourceId, controller.deleteEvent);

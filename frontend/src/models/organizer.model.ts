@@ -8,4 +8,5 @@ export interface Organizer {
   phone?: string | null;
   imageUrl?: string;
   orgTags?: OrgTag[];
+  tags?: string[];
 }
