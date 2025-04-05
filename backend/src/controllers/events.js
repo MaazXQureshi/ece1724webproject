@@ -30,6 +30,7 @@ const eventController = {
         tags: req.query.tags,
         limit: parseInt(req.query.limit, 10) || 10,
         offset: parseInt(req.query.offset, 10) || 0,
+        userId: req.query.userId,
       }; // Extract filters from query parameters
 
       const events = await getAllEvents(filters);

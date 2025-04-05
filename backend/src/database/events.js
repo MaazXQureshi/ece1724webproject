@@ -16,7 +16,7 @@ const dbOperations = {
           hours: eventData.hours,
           imageUrl: eventData.imageUrl,
           clubId: eventData.clubId, // assuming the orgId must be valid at this point
-        }
+        },
       });
 
       return event;
@@ -36,7 +36,16 @@ const dbOperations = {
       // - limit: number (default: 10)
       // - offset: number (default: 0)
 
-      const {name, date, location, tags, hours, limit = 10, offset = 0} = filters;
+      const {
+        name,
+        date,
+        location,
+        tags,
+        hours,
+        limit = 10,
+        offset = 0,
+        userId,
+      } = filters;
       const where = {};
 
       if (tags && tags.length > 0) {
@@ -45,35 +54,35 @@ const dbOperations = {
         const orgMatches = await prisma.orgTag.findMany({
           where: {
             tag: {
-              name: {in: tagFilter}
-            }
+              name: { in: tagFilter },
+            },
           },
           select: {
-            orgId: true
+            orgId: true,
           },
-          distinct: ['orgId']
+          distinct: ["orgId"],
         });
 
-        orgIdsWithTags = orgMatches.map(orgMatched => orgMatched.orgId)
+        orgIdsWithTags = orgMatches.map((orgMatched) => orgMatched.orgId);
         console.log(orgMatches);
 
         where.clubId = {
-          in: orgIdsWithTags
-        }
+          in: orgIdsWithTags,
+        };
       }
 
       if (name) {
         where.name = {
           contains: name,
-          mode: 'insensitive',
-        }
+          mode: "insensitive",
+        };
       }
 
       if (location) {
         where.location = {
           contains: location,
-          mode: 'insensitive',
-        }
+          mode: "insensitive",
+        };
       }
 
       if (hours) {
@@ -81,16 +90,25 @@ const dbOperations = {
       }
 
       if (date) {
-        let startOfDay = new Date(date)
+        let startOfDay = new Date(date);
         let endOfDay = new Date(startOfDay);
-        endOfDay.setDate(endOfDay.getDate() + 1)
+        endOfDay.setDate(endOfDay.getDate() + 1);
         where.time = {
           gte: startOfDay,
-          lte: endOfDay
-        }
+          lte: endOfDay,
+        };
       }
 
-      const total = await prisma.event.count({where});
+      // For user registrations
+      if (userId) {
+        where.registrations = {
+          some: { userId: Number(userId) },
+        };
+      }
+
+      console.log("User id to fetch events for: ", userId);
+
+      const total = await prisma.event.count({ where });
 
       const events = await prisma.event.findMany({
         where,
@@ -99,20 +117,19 @@ const dbOperations = {
             include: {
               orgTags: {
                 include: {
-                  tag: true
-                }
-              }
-            }
+                  tag: true,
+                },
+              },
+            },
           },
           registrations: true,
         },
         take: limit,
         skip: offset,
-        orderBy: {id: "asc"},
+        orderBy: { id: "asc" },
       });
 
-      return {events, total, limit, offset};
-
+      return { events, total, limit, offset };
     } catch (error) {
       console.error(error);
       throw error;
@@ -121,16 +138,16 @@ const dbOperations = {
   getEventById: async (eventId) => {
     try {
       const event = await prisma.event.findUnique({
-        where: {id: eventId},
+        where: { id: eventId },
         include: {
           organizer: {
             include: {
               orgTags: {
                 include: {
-                  tag: true
-                }
-              }
-            }
+                  tag: true,
+                },
+              },
+            },
           },
           registrations: true,
         },
@@ -144,9 +161,9 @@ const dbOperations = {
   },
   updateEvent: async (eventId, eventData) => {
     try {
-      console.log(eventData)
+      console.log(eventData);
       const event = await prisma.event.update({
-        where: {id: eventId},
+        where: { id: eventId },
         data: {
           name: eventData.name,
           time: eventData.time,
@@ -161,10 +178,10 @@ const dbOperations = {
             include: {
               orgTags: {
                 include: {
-                  tag: true
-                }
-              }
-            }
+                  tag: true,
+                },
+              },
+            },
           },
           registrations: true,
         },
@@ -180,12 +197,12 @@ const dbOperations = {
     try {
       // delete registrations, not needed if event is deleted
       await prisma.register.deleteMany({
-        where: {eventId},
+        where: { eventId },
       });
 
       // delete event
       await prisma.event.delete({
-        where: {id: eventId},
+        where: { id: eventId },
       });
     } catch (error) {
       console.error(error);
@@ -196,11 +213,11 @@ const dbOperations = {
     try {
       // check if the user and event ids exist
       const user = await prisma.user.findUnique({
-        where: {id: userId},
+        where: { id: userId },
       });
 
       const event = await prisma.event.findUnique({
-        where: {id: eventId},
+        where: { id: eventId },
       });
 
       if (!event || !user) {
@@ -222,10 +239,10 @@ const dbOperations = {
       }
 
       const response = await prisma.register.create({
-        data: {userId, eventId},
+        data: { userId, eventId },
         include: {
           event: true,
-          user: true
+          user: true,
         },
       });
 
@@ -238,11 +255,11 @@ const dbOperations = {
   unregisterEvent: async (userId, eventId) => {
     try {
       const user = await prisma.user.findUnique({
-        where: {id: userId},
+        where: { id: userId },
       });
 
       const event = await prisma.event.findUnique({
-        where: {id: eventId},
+        where: { id: eventId },
       });
 
       if (!event || !user) {
@@ -268,8 +285,8 @@ const dbOperations = {
           userId_eventId: {
             userId,
             eventId,
-          }
-        }
+          },
+        },
       });
 
       return response;

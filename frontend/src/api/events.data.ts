@@ -13,7 +13,8 @@ export interface getEventFilter {
 export async function getEvents(
   filters: getEventFilter,
   limit: number,
-  offset: number
+  offset: number,
+  userId?: number // Used for user registration fetching
 ) {
   const { eventName, eventLocation, date, hours, tags } = filters;
   try {
@@ -26,6 +27,9 @@ export async function getEvents(
     tags.forEach((tag) => params.append("tags", tag));
     if (limit) params.append("limit", limit.toString());
     if (offset) params.append("offset", offset.toString());
+    if (userId) params.append("userId", userId.toString());
+
+    console.log("User id to fetch events for: ", userId);
 
     const response = await axios.get(`/api/events?${params.toString()}`);
     const data = response.data;
