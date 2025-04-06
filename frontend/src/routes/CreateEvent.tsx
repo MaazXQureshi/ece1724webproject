@@ -19,7 +19,7 @@ const CreateEvent = () => {
   if (user && user.admin) {
     return <EventForm isEditing={false} />;
   } else {
-    return <Navigate to="/" />;
+    return <Navigate to="/" />; // TODO: Add toast notification saying user is not authorized
   }
 };
 

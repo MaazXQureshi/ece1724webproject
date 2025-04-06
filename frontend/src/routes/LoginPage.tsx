@@ -21,6 +21,8 @@ const LoginPage = () => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // TODO: Add loading state
     const response = await login(email, password);
 
     if (response.success) {

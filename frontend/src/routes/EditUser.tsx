@@ -13,7 +13,7 @@ const EditUser = () => {
   if (user && user.id === parseInt(id!)) {
     return <RegisterEdit isEditing={true} />;
   } else {
-    return <Navigate to="/" />;
+    return <Navigate to="/" />; // TODO: Add toast notification saying user is not authorized
   }
 };
 

@@ -45,6 +45,7 @@ const dbOperations = {
         limit = 10,
         offset = 0,
         userId,
+        clubId,
       } = filters;
       const where = {};
 
@@ -69,6 +70,10 @@ const dbOperations = {
         where.clubId = {
           in: orgIdsWithTags,
         };
+      }
+
+      if (clubId) {
+        where.clubId = Number(clubId);
       }
 
       if (name) {

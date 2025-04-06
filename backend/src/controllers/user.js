@@ -94,7 +94,7 @@ const userController = {
         maxAge: 3600000,
         sameSite: "Lax",
       })
-      .json({ message: "Login successful", admin: user.admin });
+      .json({ message: "Login successful", user: user });
   },
   logoutUser: (req, res) => {
     res.clearCookie("token").json({ message: "Logged out successfully" });

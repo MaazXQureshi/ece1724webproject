@@ -17,8 +17,9 @@ const dbOperations = {
     }
   },
   unregisterUser: async (userId, eventId) => {
+    console.log("Uregistered user event", userId, eventId);
     try {
-      await prisma.eventRegistration.delete({
+      await prisma.register.delete({
         where: { userId_eventId: { userId, eventId } }, // Huh, apparently you can do this for composite keys
       });
     } catch (error) {
@@ -28,7 +29,7 @@ const dbOperations = {
   },
   getUserRegistrations: async (userId) => {
     try {
-      const registrations = await prisma.eventRegistration.findMany({
+      const registrations = await prisma.register.findMany({
         where: { userId },
         include: { event: true },
       });

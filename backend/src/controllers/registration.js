@@ -1,4 +1,4 @@
-const registerDb = require("../database/register");
+const registerDb = require("../database/registration");
 
 const registerController = {
   registerUser: async (req, res) => {

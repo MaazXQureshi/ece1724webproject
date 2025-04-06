@@ -1,12 +1,12 @@
 import { Navbar } from "@/components/Navbar.tsx";
-import { EventsDashboard } from "@/components/EventsDashboard.tsx";
+// import { EventsDashboard } from "@/components/EventsDashboard.tsx";
+import { EventsPage } from "@/components/EventsPage";
 
 export const Home = () => {
-
   return (
     <>
-      <Navbar/>
-      <EventsDashboard/>
+      <Navbar />
+      <EventsPage view="home" />
     </>
-  )
-}
+  );
+};

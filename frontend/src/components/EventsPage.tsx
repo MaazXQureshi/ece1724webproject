@@ -1,4 +1,3 @@
-// src/pages/events.jsx
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar, MapPin, Clock } from "lucide-react";
@@ -25,8 +24,13 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination.tsx";
+import EventRegistrationButton from "@/components/EventRegistrationButton";
 
-export const UserEventsPage = () => {
+interface EventsPageProps {
+  view: "home" | "admin" | "user";
+}
+
+export const EventsPage: React.FC<EventsPageProps> = ({ view }) => {
   const [totalPages, setTotalPages] = useState(1);
   const [limit, setLimit] = useState(12);
   const [currentPage, setCurrentPage] = useState(1);
@@ -41,19 +45,49 @@ export const UserEventsPage = () => {
   const [eventLoading, setEventLoading] = useState(true);
   const [events, setEvents] = useState<EventResponse>();
   const { user, loading } = useAuth(); // TODO: Should probably use a better name like userLoading
+  const [registeredEventIds, setRegisteredEventIds] = useState<number[]>([]);
 
   useEffect(() => {
     const filterEvents = async () => {
       setEventLoading(true);
       try {
+        // TODO: Add logic to do different logic handling for non-user page if re-using this component
+        // For instance, below only works for user registration page. If need to fetch all organization events for organization page, remove userId argument and instead provide clubId argument
+        let events;
+
+        if (view === "user") {
+          events = await getEvents(
+            filters,
+            limit,
+            (currentPage - 1) * limit,
+            user?.id
+          );
+        } else if (view === "home") {
+          events = await getEvents(filters, limit, (currentPage - 1) * limit);
+        }
+
+        /* For organization page, something like this (can probably pass down clubId from props):
+        NOTE: Since we are reusing components, would have to pass both clubId and view since the ID could refer to either userId or clubId (organization ID)
+
         const events = await getEvents(
           filters,
           limit,
           (currentPage - 1) * limit,
-          user?.id
+          undefined, clubId
         );
+        */
 
         setEvents(events);
+        console.log("Fetched events:", events);
+
+        if (user) {
+          const userRegisteredEventIds = user.registrations?.map(
+            (e: any) => e.eventId
+          );
+          console.log("Registered Events:", userRegisteredEventIds);
+          setRegisteredEventIds(userRegisteredEventIds);
+        }
+
         setTotalPages(Math.ceil(events.total / limit));
         setEventLoading(false);
       } catch (err) {
@@ -88,7 +122,11 @@ export const UserEventsPage = () => {
         <div className="space-y-8 p-4">
           <div className="flex items-center justify-between bg-gray-200 p-2 mb-4">
             <h2 className="text-xl tracking-tight font-bold">
-              User Registrations
+              {view === "user"
+                ? "User Registrations"
+                : view === "admin"
+                ? "Organizer Events"
+                : "Browse Events"}
             </h2>
           </div>
           <div className="flex flex-col md:flex-row gap-4 justify-between my-3">
@@ -165,8 +203,19 @@ export const UserEventsPage = () => {
 
                       <div className="mt-2 flex justify-between">
                         <Button variant="outline">Learn More</Button>
-                        {/*TODO: control disabled based on whether user is authenticated */}
-                        <Button disabled={true}>Register</Button>
+                        {user ? (
+                          <EventRegistrationButton
+                            eventId={event.id}
+                            isRegistered={registeredEventIds?.includes(
+                              event.id
+                            )}
+                            setRegisteredEventIds={setRegisteredEventIds}
+                            userId={user.id}
+                          />
+                        ) : (
+                          // If user is not logged in, disable button
+                          <Button disabled={true}>Register</Button>
+                        )}
                       </div>
                     </CardContent>
                   </Card>

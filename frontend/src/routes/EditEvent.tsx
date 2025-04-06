@@ -41,7 +41,7 @@ const EditEvent = () => {
   if (user && user.admin && user.organizer?.id === event?.clubId) {
     return <EventForm isEditing={true} />; // TODO: Could potentially pass in event as props since we load it here anyways
   } else {
-    return <Navigate to="/" />;
+    return <Navigate to="/" />; // TODO: Add toast notification saying user is not authorized
   }
 };
 

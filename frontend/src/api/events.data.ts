@@ -14,7 +14,8 @@ export async function getEvents(
   filters: getEventFilter,
   limit: number,
   offset: number,
-  userId?: number // Used for user registration fetching
+  userId?: number, // Used for user registration fetching
+  clubId?: number // Used for organization page event fetching
 ) {
   const { eventName, eventLocation, date, hours, tags } = filters;
   try {
@@ -28,6 +29,7 @@ export async function getEvents(
     if (limit) params.append("limit", limit.toString());
     if (offset) params.append("offset", offset.toString());
     if (userId) params.append("userId", userId.toString());
+    if (clubId) params.append("clubId", clubId.toString());
 
     console.log("User id to fetch events for: ", userId);
 

@@ -50,6 +50,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const checkUserAuthentication = async () => {
       try {
+        console.log("Attempting to get profile");
         const response = await axios.get("/api/user/profile", {
           withCredentials: true, // Ensure cookies are sent with the request
         });
@@ -81,8 +82,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (res.status !== 200) {
         throw new Error("Login failed");
       }
-
-      setUser(res.data);
+      console.log("Successfully logged in");
+      console.log(res.data);
+      setUser(res.data.user);
       return { success: true };
     } catch (error: any) {
       console.log("AuthContext login failure");

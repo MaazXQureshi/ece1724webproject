@@ -33,7 +33,21 @@ const dbOperations = {
   },
   getUserByEmail: async (email) => {
     try {
-      return await prisma.user.findUnique({ where: { email } });
+      return await prisma.user.findUnique({
+        where: { email },
+        include: {
+          organizer: {
+            include: {
+              orgTags: {
+                include: {
+                  tag: true,
+                },
+              },
+            },
+          },
+          registrations: true,
+        },
+      });
     } catch (error) {
       throw new Error("Error retrieving user by email: " + error.message);
     }
@@ -52,6 +66,7 @@ const dbOperations = {
               },
             },
           },
+          registrations: true,
         },
       });
     } catch (error) {

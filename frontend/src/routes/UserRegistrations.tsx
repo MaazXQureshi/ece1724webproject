@@ -1,6 +1,7 @@
 import { useParams, Navigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
-import { UserEventsPage } from "@/components/UserEventsPage";
+import { EventsPage } from "@/components/EventsPage";
+import { Navbar } from "@/components/Navbar.tsx";
 
 const UserRegistrations = () => {
   const { user, loading } = useAuth();
@@ -16,10 +17,15 @@ const UserRegistrations = () => {
   console.log("User org id: ", user?.organizer?.id);
   console.log("ID: ", id);
 
-  if (user && !user.admin && user.id === parseInt(id!)) {
-    return <UserEventsPage />;
+  if (user && user.id === parseInt(id!)) {
+    return (
+      <>
+        <Navbar />
+        <EventsPage view="user" />
+      </>
+    );
   } else {
-    console.log("Back here?");
+    console.log("Back here?"); // TODO: Add toast notification saying user is not authorized
     return <Navigate to="/" />;
   }
 };

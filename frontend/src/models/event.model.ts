@@ -1,4 +1,5 @@
 import { Organizer } from "@/models/organizer.model.ts";
+import { Register } from "@/models/register.model.ts";
 
 export interface Event {
   id: number;
@@ -11,6 +12,7 @@ export interface Event {
   hours?: number | null;
   imageUrl?: string;
   organizer: Organizer;
+  registrations: Register[];
 }
 
 export interface EventResponse {

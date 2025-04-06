@@ -19,7 +19,7 @@ const EditOrganizer = () => {
   if (user && user.admin && user.organizer?.id === parseInt(id!)) {
     return <RegisterEdit isEditing={true} />;
   } else {
-    console.log("Back here?");
+    console.log("Back here?"); // TODO: Add toast notification saying user is not authorized
     return <Navigate to="/" />;
   }
 };

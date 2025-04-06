@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button.tsx";
 import { useAuth } from "@/context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export const Navbar = () => {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <header className="border-b">
@@ -28,13 +30,27 @@ export const Navbar = () => {
           {!user ? (
             <>
               {" "}
-              <Button variant={"secondary"}>Log in</Button>
-              <Button>Register</Button>
+              <Button
+                variant={"secondary"}
+                onClick={() => {
+                  navigate("/login");
+                }}
+              >
+                Log in
+              </Button>
+              <Button
+                onClick={() => {
+                  navigate("/register");
+                }}
+              >
+                Register
+              </Button>
             </>
           ) : (
             <>
               <button onClick={logout}>Logout</button>
-              {user.admin && <Button>User is admin test</Button>}
+              {user.admin && <Button>Admin Dropdown</Button>}
+              {!user.admin && <Button>User Dropdown</Button>}
             </>
           )}
         </div>

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const controller = require("../controllers/register");
+const controller = require("../controllers/registration");
 const middleware = require("../middleware/middleware");
 
 // Subscribe to event
