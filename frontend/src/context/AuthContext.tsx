@@ -13,7 +13,7 @@ import { Tag } from "@/models/tag.model.ts";
 
 interface AuthContextType {
   user: User | null;
-  loading: Boolean;
+  userLoading: Boolean;
   login: (
     email: string,
     password: string
@@ -38,14 +38,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  // useEffect(() => {
-  //   axios
-  //     .get("/api/user/profile", { withCredentials: true })
-  //     .then((response) => setUser(response.data.user))
-  //     .catch(() => setUser(null));
-  // }, []);
+  const [userLoading, setLoading] = useState(true);
 
   useEffect(() => {
     const checkUserAuthentication = async () => {
@@ -180,7 +173,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
 
       console.log("User and Admin updated successfully");
-
       setUser(userResponse.data); // Update user state
       return {
         success: true,
@@ -203,7 +195,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     <AuthContext.Provider
       value={{
         user,
-        loading,
+        userLoading,
         login,
         logout,
         registerUser,

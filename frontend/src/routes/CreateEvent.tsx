@@ -1,12 +1,13 @@
 import { useParams, Navigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
+import { toast } from "sonner";
 import EventForm from "@/components/EventForm";
 
 const CreateEvent = () => {
-  const { user, loading } = useAuth();
+  const { user, userLoading } = useAuth();
   const { id } = useParams();
 
-  if (loading) {
+  if (userLoading) {
     return <div>Loading...</div>; // TODO: Replace with spinner/loading component
   }
 
@@ -19,7 +20,14 @@ const CreateEvent = () => {
   if (user && user.admin) {
     return <EventForm isEditing={false} />;
   } else {
-    return <Navigate to="/" />; // TODO: Add toast notification saying user is not authorized
+    toast.error("Unauthorized access", {
+      position: "top-center",
+      style: {
+        backgroundColor: "#a6334e",
+        color: "white",
+      },
+    });
+    return <Navigate to="/" />;
   }
 };
 

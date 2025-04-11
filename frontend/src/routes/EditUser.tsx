@@ -1,19 +1,27 @@
 import { useParams, Navigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import RegisterEdit from "@/components/RegisterEdit";
+import { toast } from "sonner";
 
 const EditUser = () => {
-  const { user, loading } = useAuth();
+  const { user, userLoading } = useAuth();
   const { id } = useParams();
 
-  if (loading) {
+  if (userLoading) {
     return <div>Loading...</div>;
   }
 
   if (user && user.id === parseInt(id!)) {
     return <RegisterEdit isEditing={true} />;
   } else {
-    return <Navigate to="/" />; // TODO: Add toast notification saying user is not authorized
+    toast.error("Unauthorized access", {
+      position: "top-center",
+      style: {
+        backgroundColor: "#a6334e",
+        color: "white",
+      },
+    });
+    return <Navigate to="/" />;
   }
 };
 

@@ -44,15 +44,13 @@ export const EventsPage: React.FC<EventsPageProps> = ({ view }) => {
 
   const [eventLoading, setEventLoading] = useState(true);
   const [events, setEvents] = useState<EventResponse>();
-  const { user, loading } = useAuth(); // TODO: Should probably use a better name like userLoading
+  const { user, userLoading } = useAuth();
   const [registeredEventIds, setRegisteredEventIds] = useState<number[]>([]);
 
   useEffect(() => {
     const filterEvents = async () => {
       setEventLoading(true);
       try {
-        // TODO: Add logic to do different logic handling for non-user page if re-using this component
-        // For instance, below only works for user registration page. If need to fetch all organization events for organization page, remove userId argument and instead provide clubId argument
         let events;
 
         if (view === "user") {
@@ -66,6 +64,8 @@ export const EventsPage: React.FC<EventsPageProps> = ({ view }) => {
           events = await getEvents(filters, limit, (currentPage - 1) * limit);
         }
 
+        // TODO: Add logic to do different logic handling for non-user page if re-using this component
+        // For instance, above only works for home and user views. If need to fetch all organization events for organization page, remove userId argument and instead provide clubId argument
         /* For organization page, something like this (can probably pass down clubId from props):
         NOTE: Since we are reusing components, would have to pass both clubId and view since the ID could refer to either userId or clubId (organization ID)
 
@@ -116,7 +116,7 @@ export const EventsPage: React.FC<EventsPageProps> = ({ view }) => {
 
   return (
     <>
-      {eventLoading || loading ? (
+      {eventLoading || userLoading ? (
         <LoadingOverlay message="Filtering events..." />
       ) : (
         <div className="space-y-8 p-4">

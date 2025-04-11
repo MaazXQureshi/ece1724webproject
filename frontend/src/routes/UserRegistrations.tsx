@@ -2,12 +2,13 @@ import { useParams, Navigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { EventsPage } from "@/components/EventsPage";
 import { Navbar } from "@/components/Navbar.tsx";
+import { toast } from "sonner";
 
 const UserRegistrations = () => {
-  const { user, loading } = useAuth();
+  const { user, userLoading } = useAuth();
   const { id } = useParams();
 
-  if (loading) {
+  if (userLoading) {
     return <div>Loading...</div>;
   }
 
@@ -25,7 +26,14 @@ const UserRegistrations = () => {
       </>
     );
   } else {
-    console.log("Back here?"); // TODO: Add toast notification saying user is not authorized
+    toast.error("Unauthorized access", {
+      position: "top-center",
+      style: {
+        backgroundColor: "#a6334e",
+        color: "white",
+      },
+    });
+    console.log("Back here?");
     return <Navigate to="/" />;
   }
 };

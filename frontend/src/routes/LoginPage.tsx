@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
 
 const LoginPage = () => {
   const { user, login } = useAuth();
@@ -14,6 +15,13 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (user) {
+      toast.error("User already logged in", {
+        position: "top-center",
+        style: {
+          backgroundColor: "#a6334e",
+          color: "white",
+        },
+      });
       console.log("Redirecting user to dashboard as user is already logged in"); // Can handle in an alternate way if needed
       navigate("/");
     }

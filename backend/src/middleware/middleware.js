@@ -17,15 +17,8 @@ function isEmpty(str) {
   return !str || str.trim().length === 0;
 }
 
-// Configure DigitalOcean Spaces
-// const s3 = new S3Client({
-//   endpoint: new S3Client.Endpoint(process.env.DO_SPACES_ENDPOINT),
-//   accessKeyId: process.env.DO_SPACES_KEY,
-//   secretAccessKey: process.env.DO_SPACES_SECRET,
-// });
-
 const s3 = new S3Client({
-  region: "us-east-1",
+  region: "nyc3",
   endpoint: process.env.DO_SPACES_ENDPOINT,
   credentials: {
     accessKeyId: process.env.DO_SPACES_KEY,

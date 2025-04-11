@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "../context/AuthContext";
 import axios from "axios";
-// import { useRef } from "react";
 import { ImageUploadField } from "@/components/ImageUploadField";
 
 const EventForm = ({ isEditing }: { isEditing: boolean }) => {
@@ -24,9 +23,8 @@ const EventForm = ({ isEditing }: { isEditing: boolean }) => {
 
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
-  const { user, loading } = useAuth(); // TODO: Should probably use a better name like userLoading
+  const { user, userLoading } = useAuth();
   const [eventLoading, setEventLoading] = useState(true);
-  //   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
   useEffect(() => {
@@ -83,20 +81,6 @@ const EventForm = ({ isEditing }: { isEditing: boolean }) => {
     try {
       let uploadedImageUrl = eventData.imageUrl; // default to existing image (we don't want to overwrite if there is no uploaded image)
 
-      //   if (fileInputRef.current?.files?.[0]) {
-      //     const file = fileInputRef.current.files[0];
-      //     const formData = new FormData();
-      //     formData.append("image", file);
-
-      //     const uploadRes = await axios.post("/api/upload", formData, {
-      //       headers: { "Content-Type": "multipart/form-data" },
-      //     });
-
-      //     uploadedImageUrl = uploadRes.data.imageUrl;
-      //     console.log("Image URL: ", uploadedImageUrl);
-      //     eventPayload.imageUrl = uploadedImageUrl;
-      //   }
-
       if (selectedImage) {
         // TODO: Add loading state
         const formData = new FormData();
@@ -130,7 +114,7 @@ const EventForm = ({ isEditing }: { isEditing: boolean }) => {
     }
   };
 
-  if (loading || eventLoading) {
+  if (userLoading || eventLoading) {
     return <div>Loading...</div>; // TODO: Replace with spinner/loading component
   }
 
@@ -199,36 +183,7 @@ const EventForm = ({ isEditing }: { isEditing: boolean }) => {
           />
         </div>
 
-        {/* <div>
-          <Label htmlFor="imageUrl">Image URL</Label>
-          <Input
-            id="imageUrl"
-            name="imageUrl"
-            value={eventData.imageUrl}
-            onChange={handleChange}
-          />
-        </div> */}
-
-        {/* <div>
-          <Label htmlFor="image">Event Image</Label>
-          <Input
-            id="image"
-            type="file"
-            accept="image/*"
-            ref={fileInputRef}
-            className="mb-4"
-          />
-        </div> */}
         <ImageUploadField onFileSelect={(file) => setSelectedImage(file)} />
-        {/* <div>
-          {eventData.imageUrl && (
-            <img
-              src={eventData.imageUrl}
-              alt="Preview"
-              className="w-40 h-40 object-cover rounded-lg mb-4"
-            />
-          )}
-        </div> */}
 
         <div className="flex justify-end gap-2">
           <Button type="button" variant="outline" onClick={() => navigate("/")}>

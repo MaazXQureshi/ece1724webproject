@@ -21,7 +21,7 @@ import { Badge } from "@/components/ui/badge.tsx";
 import axios from "axios";
 
 interface RegisterEditProps {
-  isEditing: boolean; // Determines whether we are editing or registering a new user
+  isEditing: boolean;
 }
 
 const RegisterEdit: React.FC<RegisterEditProps> = ({ isEditing }) => {
@@ -35,14 +35,13 @@ const RegisterEdit: React.FC<RegisterEditProps> = ({ isEditing }) => {
   const [organizerData, setOrganizerData] = useState<Organizer | undefined>(
     undefined
   );
-  const [tagSearchTerm, setTagSearchTerm] = useState<string>(""); // Search input
+  const [tagSearchTerm, setTagSearchTerm] = useState<string>("");
   const [availableTags, setAvailableTags] = useState<
     { id: number; name: string }[]
-  >([]); // Available tags
+  >([]);
   const [selectedTags, setSelectedTags] = useState<
     { id: number; name: string }[]
-  >([]); // Selected tags
-  // const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]); // Store selected tag IDs
+  >([]);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const navigate = useNavigate();
 
@@ -69,16 +68,16 @@ const RegisterEdit: React.FC<RegisterEditProps> = ({ isEditing }) => {
   useEffect(() => {
     const fetchTags = async () => {
       try {
-        const response = await getTagsFull(tagSearchTerm); // Fetch from API
+        const response = await getTagsFull(tagSearchTerm);
         console.log("Fetched Tags:", response.tags);
-        setAvailableTags(response.tags); // Store the fetched tags
+        setAvailableTags(response.tags);
       } catch (err) {
         console.error("Error fetching tags:", err);
       }
     };
 
     fetchTags();
-  }, [tagSearchTerm]); // Runs whenever the user types
+  }, [tagSearchTerm]);
 
   const toggleTagSelection = (tag: { id: number; name: string }) => {
     setSelectedTags(
@@ -137,8 +136,6 @@ const RegisterEdit: React.FC<RegisterEditProps> = ({ isEditing }) => {
           setError("");
           setMessage("User successfully updated.");
           console.log("Before timeout navigation");
-          // TODO: There's a bug that doesn't wait for 2 seconds before navigating, but only for organizer edits not user edits
-          // Not sure what the issue is, but the update goes through successfully
           setTimeout(() => {
             navigate("/");
           }, 2000);
@@ -175,11 +172,10 @@ const RegisterEdit: React.FC<RegisterEditProps> = ({ isEditing }) => {
     }
   };
 
-  // Explicitly handle `checked` state to ensure it's a boolean
   const handleIsAdminChange = (checked: boolean | "indeterminate") => {
     if (checked === "indeterminate") return;
     console.log(checked);
-    setIsAdmin(checked as boolean); // cast to boolean to avoid type errors
+    setIsAdmin(checked as boolean);
   };
 
   return (
@@ -334,26 +330,6 @@ const RegisterEdit: React.FC<RegisterEditProps> = ({ isEditing }) => {
               />
             </div>
 
-            {/* <div>
-              <Label
-                htmlFor="organizerImage"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Organizer Image URL
-              </Label>
-              <Input
-                id="organizerImage"
-                type="text"
-                value={organizerData?.imageUrl || ""}
-                onChange={(e) =>
-                  setOrganizerData({
-                    ...organizerData!,
-                    imageUrl: e.target.value,
-                  })
-                }
-                className="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div> */}
             <ImageUploadField onFileSelect={(file) => setSelectedImage(file)} />
             <div>
               <DropdownMenu>

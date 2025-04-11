@@ -3,10 +3,11 @@ import { useAuth } from "@/context/AuthContext";
 import EventForm from "@/components/EventForm";
 import { useState, useEffect } from "react";
 import { Event } from "@/models/event.model.ts";
+import { toast } from "sonner";
 import axios from "axios";
 
 const EditEvent = () => {
-  const { user, loading } = useAuth();
+  const { user, userLoading } = useAuth();
   const { id } = useParams();
   const [event, setEvent] = useState<Event>();
   const [eventLoading, setEventLoading] = useState(true);
@@ -28,7 +29,7 @@ const EditEvent = () => {
     fetchEvent();
   }, [id]);
 
-  if (loading || eventLoading) {
+  if (userLoading || eventLoading) {
     return <div>Loading...</div>; // TODO: Replace with spinner/loading component
   }
 
@@ -39,9 +40,16 @@ const EditEvent = () => {
   console.log("ID: ", id);
 
   if (user && user.admin && user.organizer?.id === event?.clubId) {
-    return <EventForm isEditing={true} />; // TODO: Could potentially pass in event as props since we load it here anyways
+    return <EventForm isEditing={true} />;
   } else {
-    return <Navigate to="/" />; // TODO: Add toast notification saying user is not authorized
+    toast.error("Unauthorized access", {
+      position: "top-center",
+      style: {
+        backgroundColor: "#a6334e",
+        color: "white",
+      },
+    });
+    return <Navigate to="/" />;
   }
 };
 
